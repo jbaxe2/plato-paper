@@ -1,0 +1,11 @@
+name: plato_paper
+description: A collection of Plato elements, based on Polymer's core and paper elements for Material Design.
+dependencies:
+  core_elements: '>=0.2.2+1 <0.3.0'
+  crypto: '>=0.9.0 <0.10.0'
+  paper_elements: '>=0.3.0+1 <0.4.0'
+  polymer: '>=0.14.2+1 <0.15.0'
+  unittest: any
+transformers:
+- polymer:
+    entry_points: web/index.html

@@ -1,0 +1,37 @@
+<link rel="import" href="packages/polymer/polymer.html">
+
+<link rel="import" href="packages/core_elements/core_animated_pages.html">
+
+<link rel="import" href="plato-authenticator.html">
+<link rel="import" href="plato-communicator.html">
+<link rel="import" href="plato-user-information.html">
+
+<polymer-element name="plato-authentication-module" attributes="url">
+  <template>
+    <link rel="stylesheet" href="plato-paper-common.css">
+    <style type="text/css">
+      div#plato-auth-module {
+        background-color: #eee;
+        height: 270px;
+        width: 339px;
+      }
+    </style>
+    <div class="widget" id="plato-auth-module">
+      <core-animated-pages transitions="cross-fade">
+        <section>
+          <plato-authenticator cross-fade></plato-authenticator>
+        </section>
+        <section>
+          <plato-user-information cross-fade></plato-user-information>
+        </section>
+      </core-animated-pages>
+    </div>
+    <plato-communicator
+      id="plato-auth-comm"
+      url="{{url}}"
+      successSignal="plato-auth-success"
+      errorSignal="plato-auth-error">
+    </plato-communicator>
+  </template>
+  <script type="application/dart" src="plato-authentication-module.dart"></script>
+</polymer-element>

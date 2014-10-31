@@ -1,0 +1,67 @@
+<link rel="import" href="packages/polymer/polymer.html">
+
+<link rel="import" href="packages/paper_elements/paper_button.html">
+<link rel="import" href="packages/paper_elements/paper_checkbox.html">
+
+<polymer-element name="plato-sections-chooser">
+  <template>
+    <link rel="stylesheet" href="plato-paper-common.css">
+    <style type="text/css">
+      div#sections-chooser-widget {
+        width:  480px;
+      }
+
+      p {
+        margin-left: 16px;
+      }
+
+      span {
+        position: relative;
+        top: -8px;
+      }
+
+      legend {
+        font-weight: bold;
+      }
+
+      paper-checkbox {
+        margin: 4px;
+      }
+
+      paper-checkbox::shadow #ink[checked] {
+        color: #537ba4;
+      }
+
+      paper-checkbox::shadow #checkbox.checked {
+        border-color: #537ba4;
+      }
+    </style>
+    <div class="widget" id="sections-chooser-widget">
+      <template if="{{sections.length == 0}}">
+        <p>There are no sections available for the selected course and term.</p>
+      </template>
+
+      <template if="{{sections.length > 0}}">
+        <fieldset>
+          <legend>Check sections in the following list to add to the request:</legend>
+          <template repeat="{{sectionKey in sections.keys}}">
+            <br><paper-checkbox
+              id="{{sectionKey}}_checkbox"
+              on-change="{{toggleSectionSelected}}"
+            ></paper-checkbox>
+            <span>{{sections[sectionKey]}}</span><br>
+          </template>
+        </fieldset><br>
+
+        <paper-button
+          style="background-color: #537ba4; margin-left: 2px;"
+          label="Add the above selected to the request"
+          icon="add-circle-outline"
+          raisedButton
+          on-click="{{signalSectionsSelected}}"
+        ></paper-button>
+      </template>
+    </div>
+  </template>
+  <script type="application/dart" src="plato-sections-chooser.dart"></script>
+</polymer-element>

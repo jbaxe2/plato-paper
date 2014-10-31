@@ -1,0 +1,31 @@
+<link rel="import" href="packages/polymer/polymer.html">
+
+<link rel="import" href="packages/core_elements/core_list_dart.html">
+
+<polymer-element name="plato-cross-listing">
+  <template>
+    <link rel="stylesheet" href="plato-paper-common.css">
+    <style type="text/css">
+      span.clInfoItem {
+        display: block;
+        padding: 8px;
+      }
+    </style>
+    <div class="widget">
+      <span id="header">Cross-listing Set</span>
+
+      <template if="{{1 > crossListing.sections}}">
+        <p>There are currently no sections added to this cross-listing set.</p>
+      </template>
+
+      <template if="{{0 < crossListing.sections}}">
+        <core-list-dart data="{{crossListing.sections}}" height="50">
+          <template>
+            <span class="clInfoItem"><strong>{{selected}}</strong></span>
+          </template>
+        </core-list-dart>
+      </template>
+    </div>
+  </template>
+  <script type="application/dart" src="plato-cross-listing.dart"></script>
+</polymer-element>

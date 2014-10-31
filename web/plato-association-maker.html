@@ -1,0 +1,51 @@
+<link rel="import" href="packages/polymer/polymer.html">
+
+<link rel="import" href="packages/core_elements/core_icons.html">
+
+<link rel="import" href="packages/paper_elements/paper_button.html">
+<link rel="import" href="packages/paper_elements/paper_input.html">
+<link rel="import" href="packages/paper_elements/paper_toast.html">
+
+<polymer-element name="plato-association-maker">
+  <template>
+    <link rel="stylesheet" href="plato-paper-common.css">
+    <style type="text/css">
+      span#association-key-text {
+        display: none;
+        margin-top: 16px;
+      }
+    </style>
+    <div class="widget">
+      <span id="header">Assocation Key Maker</span>
+
+      <paper-input id="itemIdInput"
+        label="PLATO Section or User Id"
+        floatingLabel
+        value="{{itemId}}"
+        on-change="{{handleItemIdChange}}">
+      </paper-input><br>
+
+      <paper-input
+        id="nodeIdInput"
+        label="Node Identifier"
+        floatingLabel
+        value="{{nodeId}}"
+        on-change="{{handleNodeIdChange}}">
+      </paper-input><br>
+
+      <paper-button
+        style="background-color: #537ba4; margin-left: 2px;"
+        label="Create Association Key"
+        icon="create"
+        raisedButton
+        on-click="{{makeAssociationKey}}"></paper-button>
+
+      <span id="association-key-text">
+        <strong>The section or user to node association key is:</strong>
+        &nbsp; {{associationKey}}
+      </span>
+    </div>
+    <paper-toast id="associationToast"></paper-toast>
+  </template>
+  <script type="application/dart" src="plato-association-maker.dart"></script>
+</polymer-element>

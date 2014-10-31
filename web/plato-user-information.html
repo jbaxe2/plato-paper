@@ -1,0 +1,16 @@
+<link rel="import" href="packages/polymer/polymer.html">
+
+<polymer-element name="plato-user-information">
+  <template>
+    <link rel="stylesheet" href="plato-paper-common.css">
+    <div class="widget">
+      <span id="header">PLATO User Information</span>
+
+      <strong>First name:</strong> &nbsp; {{firstName}}<br>
+      <strong>Last name:</strong> &nbsp; {{lastName}}<br>
+      <strong>E-mail address:</strong> &nbsp; {{email}}<br>
+      <strong>Campus-wide ID (A#):</strong> &nbsp; {{userId}}
+    </div>
+  </template>
+  <script type="application/dart" src="plato-user-information.dart"></script>
+</polymer-element>

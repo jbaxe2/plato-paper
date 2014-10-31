@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Plato Paper v0.0.01 (prototyping)</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Joseph B. Axenroth">
+    <meta
+      name="description"
+      content="Plato Paper v0.0.01, prototyping written in Dart Polymer.">
+
+    <script src="packages/web_components/dart_support.js"></script>
+
+    <!-- Start of importing Plato Paper 'raw' components. -->
+    <link rel="import" href="plato-association-maker.html">
+    <link rel="import" href="plato-authenticator.html">
+    <link rel="import" href="plato-communicator.html">
+    <link rel="import" href="plato-course-chooser.html">
+    <link rel="import" href="plato-cross-listing.html">
+    <link rel="import" href="plato-department-chooser.html">
+    <link rel="import" href="plato-error-displayer.html">
+    <link rel="import" href="plato-faculty-chooser.html">
+    <link rel="import" href="plato-previous-content.html">
+    <link rel="import" href="plato-previous-content-listing.html">
+    <link rel="import" href="plato-section-info.html">
+    <link rel="import" href="plato-sections-chooser.html">
+    <link rel="import" href="plato-simple-chooser.html">
+    <link rel="import" href="plato-term-chooser.html">
+    <link rel="import" href="plato-user-information.html">
+    <!-- End of importing Plato Paper 'raw' components. -->
+
+    <!-- Start of importing Plato Paper modules. -->
+    <link rel="import" href="plato-authentication-module.html">
+    <!-- End of importing Plato Paper modules. -->
+
+    <script type="application/dart">export 'package:polymer/init.dart';</script>
+    <script src="packages/browser/dart.js"></script>
+
+    <link rel="stylesheet" href="plato-paper.css">
+  </head>
+  <body unresolved>
+    <p>Plato Paper elements prototyping (for future Plato-based web applications).</p>
+
+    <plato-association-maker></plato-association-maker><br>
+
+    <plato-authentication-module
+      url="http://dev.local/dart/auth/learn">
+    </plato-authentication-module><br>
+  </body>
+</html>

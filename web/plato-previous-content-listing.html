@@ -1,0 +1,21 @@
+<link rel="import" href="packages/polymer/polymer.html">
+
+<link rel="import" href="packages/core_elements/core_item.html">
+
+<polymer-element name="plato-previous-content-listing">
+  <template>
+    <link rel="stylesheet" href="plato-paper-common.css">
+    <div class="widget">
+      <span id="header">Previous PLATO content list</span>
+      <div>
+        <template repeat="{{previousSection in previousSections}}">
+          <core-item icon="add-circle">
+            {{previousSection.previous.id}} [{{previousSection.previous.title}}]
+            <core-icon icon="more-vert" on-click="{{handlePreviousContentable}}"></core-icon>
+          </core-item>
+        </template>
+      </div>
+    </div>
+  </template>
+  <script type="application/dart" src="plato-previous-content-listing.dart"></script>
+</polymer-element>

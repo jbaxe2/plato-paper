@@ -1,0 +1,17 @@
+<link rel="import" href="packages/polymer/polymer.html">
+
+<link rel="import" href="packages/core_elements/core_icons.html">
+
+<link rel="import" href="packages/paper_elements/paper_dialog.html">
+
+<polymer-element name="plato-error-displayer">
+  <template>
+    <paper-dialog id="error-dialog" heading="{{title}}" transition="paper-dialog-transition-center">
+      <div>
+        <core-icon icon="error"></core-icon>
+        {{message}}
+      </div>
+    </paper-dialog>
+  </template>
+  <script type="application/dart" src="plato-error-displayer.dart"></script>
+</polymer-element>

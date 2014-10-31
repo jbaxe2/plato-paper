@@ -1,0 +1,54 @@
+<link rel="import" href="packages/polymer/polymer.html">
+
+<link rel="import" href="packages/core_elements/core_icons.html">
+
+<link rel="import" href="packages/paper_elements/paper_button.html">
+<link rel="import" href="packages/paper_elements/paper_input.html">
+<link rel="import" href="packages/paper_elements/paper_toast.html">
+
+<polymer-element name="plato-authenticator" attributes="username password">
+  <template>
+    <link rel="stylesheet" href="plato-paper-common.css">
+    <style type="text/css">
+      paper-button {
+        margin-left:  2px;
+        margin-right: 8px;
+      }
+    </style>
+    <div class="widget">
+      <span id="header">PLATO Authenticator</span>
+
+      <paper-input
+        id="username"
+        label="PLATO Username"
+        floatinglabel
+        value="{{username}}"
+        on-change="{{handleUsernameChange}}"></paper-input>
+
+      <paper-input
+        type="password"
+        id="password"
+        label="PLATO Password"
+        floatinglabel
+        value="{{password}}"
+        on-change="{{handlePasswordChange}}"></paper-input>
+
+      <paper-button
+        style="background-color: #537ba4;"
+        label="authenticate"
+        icon="lock-outline"
+        raisedButton
+        on-click="{{signalAuthentication}}"></paper-button>
+
+      <paper-button
+        style="background-color: #537ba4; margin-left: 0px; margin-right: 0px;"
+        label="clear"
+        icon="rotate-left"
+        raisedButton
+        on-click="{{clearAuthentication}}"></paper-button>
+
+      <paper-toast id="authToast"></paper-toast>
+    </div>
+  </template>
+  <script type="application/dart" src="plato-authenticator.dart"></script>
+</polymer-element>

@@ -1,0 +1,26 @@
+/**
+ * ©2014 Joseph B. Axenroth
+ *
+ * This is an ancilliary CSS file for Plato Paper custom elements, for which
+ * several elements share a common thematic approach to subelements.
+ */
+
+div.widget {
+  background-color: white;
+  border: 1px solid black;
+  padding: 8px;
+  width: 320px;
+
+  -moz-box-shadow:    1px 1px 3px 4px #bbb !important;
+  -webkit-box-shadow: 1px 1px 3px 4px #bbb !important;
+  box-shadow:         1px 1px 3px 4px #bbb !important;
+}
+
+span#header {
+  display: block;
+  background-color: #ddd;
+  margin-bottom: 8px;
+  padding: 8px;
+  text-align: center;
+  font-weight: bold;
+}

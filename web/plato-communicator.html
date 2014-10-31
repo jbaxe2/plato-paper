@@ -1,0 +1,18 @@
+<link rel="import" href="packages/polymer/polymer.html">
+
+<link rel="import" href="packages/core_elements/core_ajax_dart.html">
+
+<polymer-element name="plato-communicator" attributes="url successSignal errorSignal">
+  <template>
+    <core-ajax-dart
+      id="ajax"
+      url="{{url}}"
+      method="{{method}}"
+      params="{{params}}"
+      body="{{body}}"
+      handleAs="json"
+      on-core-response="{{handleResponse}}">
+    </core-ajax-dart>
+  </template>
+  <script type="application/dart" src="plato-communicator.dart"></script>
+</polymer-element>

@@ -1,0 +1,86 @@
+<link rel="import" href="packages/polymer/polymer.html">
+
+<link rel="import" href="packages/core_elements/core_icon_button.html">
+<link rel="import" href="packages/core_elements/core_item.html">
+<link rel="import" href="packages/core_elements/core_menu.html">
+<link rel="import" href="packages/core_elements/core_overlay.html">
+<link rel="import" href="packages/core_elements/core_toolbar.html">
+
+<polymer-element name="plato-section-info">
+  <template>
+    <link rel="stylesheet" href="plato-paper-common.css">
+    <style type="text/css">
+      div#container {
+        padding: 0px;
+      }
+
+      core-toolbar {
+        background-color: #537ba4;
+      }
+
+      core-overlay#section-info-menu-overlay {
+        position: relative;
+        left: -64px;
+        top: 88px;
+      }
+
+      core-menu {
+        background-color: #ddd;
+        position: relative;
+        left: 0px;
+        top: 0px;
+        border: 1px solid black;
+        padding: 1px;
+        font-size: .7em;
+      }
+
+      div#section-info-body {
+        border: 0px;
+        border-top: 1px solid black;
+        padding: 8px;
+      }
+    </style>
+    <div class="widget" id="container">
+      <core-toolbar>
+        <core-icon-button
+          id="section-info-menu-icon"
+          icon="menu"
+          on-click="{{openSectionInfoMenu}}"></core-icon-button>
+
+        <div>{{section}}</div>
+
+        <core-overlay id="section-info-menu-overlay" layered="true">
+          <core-menu
+            id="section-info-menu"
+            style="background-color: #ddd; border: 1px solid black; padding: 8px;"
+            on-core-select="{{onSectionMenuSelect}}">
+            <style type="text/css">
+              core-item:hover {
+                background-color: #ccc;
+                padding-right: 4px;
+                cursor: pointer;
+                font-weight: bold;
+              }
+            </style>
+            <core-item icon="done-all" label="Cross-list with another section"></core-item>
+            <core-item icon="content-copy" label="Copy previous Learn content"></core-item>
+            <core-item icon="inbox" label="Import previous Vista content"></core-item>
+            <core-item icon="remove-circle-outline" label="Remove this section"></core-item>
+          </core-menu>
+        </core-overlay>
+      </core-toolbar>
+
+      <div id="section-info-body">
+        <span>
+          <strong>Course section:</strong>  {{section}}<br>
+          <strong>CRN:</strong>  {{number}}<br>
+          <strong>Title:</strong>  {{title}}<br>
+          <strong>Instructor:</strong>  {{instructor}}<br>
+          <strong>Meeting time:</strong>  {{time}}<br>
+          <strong>Section term:</strong>  {{term}}<br>
+        </span>
+      </div>
+    </div>
+  </template>
+  <script type="application/dart" src="plato-section-info.dart"></script>
+</polymer-element>
