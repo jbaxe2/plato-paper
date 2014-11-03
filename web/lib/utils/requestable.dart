@@ -1,9 +1,10 @@
 part of plato.paper.utils;
 
-/**
- * The [Requestable] class is an abstract class that should be subclassed for
- * either course sections or sandboxes.
- */
+/// The [Requestable] class is an abstract class that should be subclassed for
+/// either course sections or sandboxes.
 abstract class Requestable {
-  String id, title;
+  String _id, _title;
+
+  String get id => _id;
+  String get title => _title;
 }

@@ -1,17 +1,13 @@
 part of plato.paper.errors;
 
-/**
- * The [PlatoPaperException] is an abstract [Exception] class, and is the base
- * class for all of the Plato Paper exceptions.
- */
+/// The [PlatoPaperException] is an abstract [Exception] class, and is the base
+/// class for all of the Plato Paper exceptions.
 abstract class PlatoPaperException implements Exception {
-  String message = 'An unknown Plato Paper exception has occurred.';
+  final String _message;
 
-  PlatoPaperException ([String theMessage = '']) : super () {
-    if (0 < theMessage.length) {
-      this.message = theMessage;
-    }
-  }
+  PlatoPaperException (
+    [this._message = 'An unknown Plato Paper error has occurred.']
+  );
 
-  String toString() => message;
+  String toString() => _message;
 }

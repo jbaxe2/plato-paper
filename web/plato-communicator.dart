@@ -55,6 +55,7 @@ class PlatoCommunicator extends PolymerElement {
 
   /// The [PlatoCommunicator.created] method...
   PlatoCommunicator.created() : super.created() {
+    method = 'GET';
     _params = new Map<String, dynamic>();
   }
 

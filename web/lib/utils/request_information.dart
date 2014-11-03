@@ -1,48 +1,34 @@
 part of plato.paper.utils;
 
 class RequestInformation {
-  /**
-   * The singleton instance of [RequestInformation], containing.
-   */
+  /// The singleton instance of [RequestInformation], containing.
   static RequestInformation _instance;
 
-  /**
-   * The singleton instance of [UserInformation], which provides user context.
-   */
+  /// The singleton instance of [UserInformation], which provides user context.
   UserInformation _userInfo;
 
-  /**
-   * The [List] of requested [Section]s.
-   */
+  /// The [List] of requested [Section]s.
   List<Section> _sections;
 
-  /**
-   * The [List] of requested [Sandbox]es.
-   */
+  /// The [List] of requested [Sandbox]es.
   List<Sandbox> _sandboxes;
 
-  /**
-   * The [List] of requested [CrossListing]; every [Section] in every [CrossListing]
-   * must also be present in the [List] of requested [Section]s.
-   */
+  /// The [List] of requested [CrossListing]; every [Section] in every
+  /// [CrossListing] must also be present in the [List] of requested
+  /// [Section]s.
   List<CrossListing> _crossListings;
 
-  /**
-   * The [List] of [LearnSectionCopy] instances; the requested [Section] instace
-   * must also be present in the [List] of requested [Section]s.
-   */
+  /// The [List] of [LearnSectionCopy] instances; the requested [Section]
+  /// instace must also be present in the [List] of requested [Section]s.
   List<LearnSectionCopy> _learnSectionCopies;
 
-  /**
-   * The [List] of [VistaSectionImport]s; the requested [Section] instance must
-   * also be present in the [List] of requested [Section]s.
-   */
+  /// The [List] of [VistaSectionImport]s; the requested [Section] instance
+  /// must also be present in the [List] of requested [Section]s.
   List<VistaSectionImport> _vistaSectionImports;
 
-  /**
-   * The [RequestInformation] factory constructor is used to retrieve the singleton
-   * instance of this class, creating it if it has not already been created.
-   */
+  /// The [RequestInformation] factory constructor is used to retrieve the
+  /// singleton instance of this class, creating it if it has not already been
+  /// created.
   factory RequestInformation() {
     if (null == _instance) {
       _instance = new RequestInformation._internal();
@@ -51,11 +37,9 @@ class RequestInformation {
     return _instance;
   }
 
-  /**
-   * The [RequestInformation._internal] private constructor is called by the
-   * factory constructor a single time, to create the singleton instance of this
-   * class.  Fields are initalized during instantiation.
-   */
+  /// The [RequestInformation._internal] private constructor is called by the
+  /// factory constructor a single time, to create the singleton instance of
+  /// this class.  Fields are initalized during instantiation.
   RequestInformation._internal() {
     _userInfo = new UserInformation();
 
@@ -72,11 +56,9 @@ class RequestInformation {
   List<LearnSectionCopy> get learnSectionCopies => _learnSectionCopies;
   List<VistaSectionImport> get vistaSectionImports => _vistaSectionImports;
 
-  /**
-   * The [addSection] method allows the addition of a [Section] instance to the
-   * request information.  If the [Section] has already been added, an instance
-   * of [RequestableException] will be thrown.
-   */
+  /// The [addSection] method allows the addition of a [Section] instance to
+  /// the request information.  If the [Section] has already been added, an
+  /// instance of [RequestableException] will be thrown.
   void addSection (Section aSection) {
     if (_sections.contains (aSection)) {
       throw new RequestableException (
@@ -87,11 +69,9 @@ class RequestInformation {
     _sections.add (aSection);
   }
 
-  /**
-   * The [removeSection] method allows the removal of a specific [Section] instance
-   * from the request.  If the [Section] is not part of the request, an instance
-   * of [RequestableException] will be thrown.
-   */
+  /// The [removeSection] method allows the removal of a specific [Section]
+  /// instance from the request.  If the [Section] is not part of the request,
+  /// an instance of [RequestableException] will be thrown.
   void removeSection (Section aSection) {
     if (!_sections.contains (aSection)) {
       throw new RequestableException (
@@ -102,11 +82,9 @@ class RequestInformation {
     _sections.remove (aSection);
   }
 
-  /**
-   * The [addSandbox] method allows the addition of a [Sandbox] instance to the
-   * request.  If the [Sandbox] has already been added, a [RequestableException]
-   * instance will be thrown.
-   */
+  /// The [addSandbox] method allows the addition of a [Sandbox] instance to
+  /// the request.  If the [Sandbox] has already been added, an instance of
+  /// [RequestableException] will be thrown.
   void addSandbox (Sandbox aSandbox) {
     if (_sandboxes.contains (aSandbox)) {
       throw new RequestableException (
@@ -115,11 +93,9 @@ class RequestInformation {
     }
   }
 
-  /**
-   * The [removeSandbox] method allows the removal of a specific [Sandbox] instance
-   * from the request.  If the [Sandbox] is not part of the request, then an
-   * instance of [RequestableException] will be thrown.
-   */
+  /// The [removeSandbox] method allows the removal of a specific [Sandbox]
+  /// instance from the request.  If the [Sandbox] is not part of the request,
+  /// then an instance of [RequestableException] will be thrown.
   void removeSandbox (Sandbox aSandbox) {
     if (!_sandboxes.contains (aSandbox)) {
       throw new RequestableException (
@@ -130,12 +106,10 @@ class RequestInformation {
     _sandboxes.remove (aSandbox);
   }
 
-  /**
-   * The [addCrossListing] method allows the addition of a [CrossListing] instance
-   * to the request.  If the instance was previously added, or if not every [Section]
-   * instance within the [CrossListing] instance is part of the request, then
-   * a [CrossListingException] instance will be thrown.
-   */
+  /// The [addCrossListing] method allows the addition of a [CrossListing]
+  /// instance to the request.  If the instance was previously added, or if not
+  /// every [Section] instance within the [CrossListing] instance is part of
+  /// the request, then a [CrossListingException] instance will be thrown.
   void addCrossListing (CrossListing aCrossListing) {
     if (_crossListings.contains (aCrossListing)) {
       throw new CrossListingException (
@@ -155,11 +129,9 @@ class RequestInformation {
     _crossListings.add (aCrossListing);
   }
 
-  /**
-   * The [removeCrossListing] method allows the removal of a specific instance
-   * of [CrossListing] from the request.  If it was not a part of the request,
-   * then a [CrossListingException] instance will be thrown.
-   */
+  /// The [removeCrossListing] method allows the removal of a specific instance
+  /// of [CrossListing] from the request.  If it was not a part of the request,
+  /// then a [CrossListingException] instance will be thrown.
   void removeCrossListing (CrossListing aCrossListing) {
     if (!_crossListings.contains (aCrossListing)) {
       throw new CrossListingException (
@@ -170,12 +142,10 @@ class RequestInformation {
     _crossListings.remove (aCrossListing);
   }
 
-  /**
-   * The [addLearnSectionCopy] method allows the addition of a [LearnSectionCopy]
-   * instance to the requst.  Should the instance have already been added, or if
-   * its requested [Requestable] instance not be a part of the request, then a
-   * [PreviousContentException] instance will be thrown.
-   */
+  /// The [addLearnSectionCopy] method allows the addition of an instance of
+  /// [LearnSectionCopy] to the requst.  Should the instance have already been
+  /// added, or if its requested [Requestable] instance not be a part of the
+  /// request, then a [PreviousContentException] instance will be thrown.
   void addLearnSectionCopy (LearnSectionCopy aLearnSectionCopy) {
     if (_learnSectionCopies.contains (aLearnSectionCopy)) {
       throw new PreviousContentException (
@@ -192,11 +162,9 @@ class RequestInformation {
     _learnSectionCopies.add (aLearnSectionCopy);
   }
 
-  /**
-   * The [removeLearnSectionCopy] method allows the removal of a specific instance
-   * of [LearnSectionCopy] from the request.  If it is not part of the request,
-   * then a [PreviousContentException] instance will be thrown.
-   */
+  /// The [removeLearnSectionCopy] method allows the removal of a specific
+  /// instance of [LearnSectionCopy] from the request.  If it is not part of
+  /// the request, then a [PreviousContentException] instance will be thrown.
   void removeLearnSectionCopy (LearnSectionCopy aLearnSectionCopy) {
     if (!_learnSectionCopies.contains (aLearnSectionCopy)) {
       throw new PreviousContentException (
@@ -207,12 +175,10 @@ class RequestInformation {
     _learnSectionCopies.remove (aLearnSectionCopy);
   }
 
-  /**
-   * The [addVistaSectionImport] method allows the addition of a [VistaSectionImport]
-   * instance to the request.  Should the instance have already been added, or if
-   * its requested [Requestable] instance not be a part of the request, then a
-   * [PreviousContentException] instance will be thrown.
-   */
+  /// The [addVistaSectionImport] method allows the addition of an instance of
+  /// [VistaSectionImport] to the request.  Should the instance have already
+  /// been added, or if its requested [Requestable] instance not be a part of
+  /// the request, then a [PreviousContentException] instance will be thrown.
   void addVistaSectionImport (VistaSectionImport aVistaSectionImport) {
     if (_vistaSectionImports.contains (aVistaSectionImport)) {
       throw new PreviousContentException (
@@ -229,11 +195,9 @@ class RequestInformation {
     _vistaSectionImports.add (aVistaSectionImport);
   }
 
-  /**
-   * The [removeVistaSectionImport] method allows the removal of a specific instance
-   * of [VistaSectionImport] from the request.  If it is not part of the request,
-   * then a [PreviousContentException] instance will be thrown.
-   */
+  /// The [removeVistaSectionImport] method allows the removal of a specific
+  /// instance of [VistaSectionImport] from the request.  If it is not part of
+  /// the request, then a [PreviousContentException] instance will be thrown.
   void removeVistaSectionImport (VistaSectionImport aVistaSectionImport) {
     if (!_vistaSectionImports.contains (aVistaSectionImport)) {
       throw new PreviousContentException (
@@ -244,19 +208,16 @@ class RequestInformation {
     _vistaSectionImports.remove (aVistaSectionImport);
   }
 
-  /**
-   * The [toJson] method outputs a JSON-based [String] representation of the
-   * request information reflected by this class.
-   */
-  String toJson() {
-    Map requestJson = new Map()
-      ..['userInfo'] = _userInfo
-      ..['sections'] = _sections
-      ..['sandboxes'] = _sandboxes
-      ..['crossListings'] = _crossListings
-      ..['learnSectionCopies'] = _learnSectionCopies
-      ..['vistaSectionImports'] = _vistaSectionImports;
-
-    return JSON.encode (requestJson);
+  /// The [toJson] method outputs a JSON-based [String] representation of the
+  /// request information reflected by this class.
+  Object toJson() {
+    return {
+      'userInfo': _userInfo,
+      'sections': _sections,
+      'sandboxes': _sandboxes,
+      'crossListings': _crossListings,
+      'learnSectionCopies':_learnSectionCopies,
+      'vistaSectionImports': _vistaSectionImports
+    };
   }
 }

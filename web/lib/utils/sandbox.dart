@@ -9,9 +9,7 @@ class Sandbox extends Requestable {
     }
   }
 
-  /**
-   * The [toJson] method...
-   */
+  /// The [toJson] method...
   String toJson() {
     Map sandboxJson = new Map();
 

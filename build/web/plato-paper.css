@@ -1,0 +1,21 @@
+/**
+ * ©2014 Joseph B. Axenroth
+ *
+ * This is the main CSS file for Plato Paper.
+ */
+
+body {
+  line-height: 1.2em;
+  padding: 8px;
+  padding-top: 0px;
+}
+
+div {
+  background-color: white;
+  border: 1px solid black;
+  padding: 8px;
+
+  -moz-box-shadow:    1px 1px 3px 4px #ccc !important;
+  -webkit-box-shadow: 1px 1px 3px 4px #ccc !important;
+  box-shadow:         1px 1px 3px 4px #ccc !important;
+}

@@ -1,4 +1,4 @@
-library plato.paper.previous_content;
+library plato.paper.previous_content_listing;
 
 import 'dart:html';
 

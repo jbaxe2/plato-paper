@@ -1,17 +1,15 @@
 part of plato.paper.utils;
 
 class Section extends Requestable {
-  String section;
-  String number;
-  String department;
-  String instructor;
-  String time;
-  String term;
+  String _section;
+  String _number;
+  String _department;
+  String _instructor;
+  String _time;
+  String _term;
 
-  /**
-   * The [Section] constructor uses named parameters for implementing the data
-   * structure's fields, and sets the requestable ID as the section ID.
-   */
+  /// The [Section] constructor uses named parameters for implementing the data
+  /// structure's fields, and sets the requestable ID as the section ID.
   Section (
     {
       String section, String number, String title,
@@ -20,25 +18,32 @@ class Section extends Requestable {
     }
   ) {
     this
-      ..section = section
-      ..number = number
-      ..title = title
-      ..department = department
-      ..instructor = instructor
-      ..time = time
-      ..term = term;
+      .._section = section
+      .._number = number
+      .._title = title
+      .._department = department
+      .._instructor = instructor
+      .._time = time
+      .._term = term;
 
-    this.id = this.section;
+    this._id = this._section;
   }
 
-  /**
-   * The [isDay] method is used to determine if the course section this class
-   * represents is part of the Day Division (true) or DGCE (false). If it is
-   * indeterminable which division the course belongs, a [RequestableException]
-   * instance will be thrown.
-   */
+  /// The getters for the [Section] fields.
+  String get section => _section;
+  String get number => _number;
+  String get title => _title;
+  String get department => _department;
+  String get instructor => _instructor;
+  String get time => _time;
+  String get term => _term;
+
+  /// The [isDay] method is used to determine if the course section this class
+  /// represents is part of the Day Division (true) or DGCE (false). If it is
+  /// indeterminable which division the course belongs, an instance of
+  /// [RequestableException] will be thrown.
   bool isDay() {
-    String digitStr = section.substring (section.length - 3, section.length - 2);
+    String digitStr = _section.substring (_section.length - 3, _section.length - 2);
 
     // Dual enrollment, and DGCE sections for Day division cross-registration.
     if (('R' == digitStr) || ('E' == digitStr)) {
@@ -60,20 +65,17 @@ class Section extends Requestable {
     );
   }
 
-  /**
-   * The [toJson] method returns a JSON-based [String] representation containing
-   * the information of the course section for an instance of this class.
-   */
-  String toJson() {
-    Map sectionJson = new Map()
-      ..['section'] = section
-      ..['number'] = number
-      ..['title'] = title
-      ..['department'] = department
-      ..['instructor'] = instructor
-      ..['time'] = time
-      ..['term'] = term;
-
-    return JSON.encode (sectionJson);
+  /// The [toJson] method returns an [Object] representation containing the
+  /// information of the course section for an instance of this class.
+  Object toJson() {
+    return {
+      'section': _section,
+      'number': _number,
+      'title': _title,
+      'department': _department,
+      'instructor': _instructor,
+      'time': _time,
+      'term': _term
+    };
   }
 }
