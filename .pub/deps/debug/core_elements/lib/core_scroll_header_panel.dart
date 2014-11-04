@@ -91,9 +91,15 @@ class CoreScrollHeaderPanel extends HtmlElement with DomProxyMixin {
   bool get scrollAwayTopbar => jsElement['scrollAwayTopbar'];
   set scrollAwayTopbar(bool value) { jsElement['scrollAwayTopbar'] = value; }
 
+  /// Returns the scrollable element.
+  get scroller => jsElement['scroller'];
+
   get header => jsElement['header'];
 
-  get scroller => jsElement['scroller'];
+  /// Invoke this to tell `core-scroll-header-panel` to re-measure the header's
+  /// height.
+  void measureHeaderHeight() =>
+      jsElement.callMethod('measureHeaderHeight', []);
 }
 @initMethod
 upgradeCoreScrollHeaderPanel() => registerDartType('core-scroll-header-panel', CoreScrollHeaderPanel);

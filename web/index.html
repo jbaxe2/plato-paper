@@ -11,8 +11,6 @@
       name="description"
       content="Plato Paper v0.0.01, prototyping written in Dart Polymer.">
 
-    <script src="packages/web_components/dart_support.js"></script>
-
     <!-- Start of importing Plato Paper 'raw' components. -->
     <link rel="import" href="plato-association-maker.html">
     <link rel="import" href="plato-authenticator.html">
@@ -33,6 +31,7 @@
 
     <!-- Start of importing Plato Paper modules. -->
     <link rel="import" href="plato-authentication-module.html">
+    <link rel="import" href="plato-departments-module.html">
     <!-- End of importing Plato Paper modules. -->
 
     <script type="application/dart">export 'package:polymer/init.dart';</script>
@@ -44,9 +43,6 @@
     <p>Plato Paper elements prototyping (for future Plato-based web applications).</p>
 
     <plato-association-maker></plato-association-maker><br>
-
-    <plato-authentication-module
-      url="http://dev.local/dart/auth/learn">
-    </plato-authentication-module><br>
+    <plato-departments-module></plato-departments-module>
   </body>
 </html>

@@ -124,23 +124,23 @@ class PlatoCommunicator extends PolymerElement {
         } else {
           params = jsonParams;
         }
-
-        _rawXhr = platoAjax.go();
       } catch (e) {
         throw new CommunicationsException (
           'Unable to encode the Ajax params as JSON data.'
         );
       }
     }
+
+    _rawXhr = platoAjax.go();
   }
 
   /// The [handleResponse] method is automatically invoked when a response from
   /// the server has been received.  A custom event is fired depending on the
   /// success and error signals provided, passing along the response.
   void handleResponse() {
-    String signalWhich = (platoAjax.isSuccess (_rawXhr)) ? successSignal : errorSignal;
-    Map<String, dynamic> response = JSON.decode (platoAjax.response);
+    String signalWhich =
+      (platoAjax.isSuccess (_rawXhr)) ? successSignal : errorSignal;
 
-    this.fire (signalWhich, detail: response);
+    this.fire (signalWhich, detail: platoAjax.response);
   }
 }

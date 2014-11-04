@@ -7,6 +7,7 @@ library polymer.src.build.import_inliner;
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:collection' show LinkedHashSet;
 
 import 'package:analyzer/analyzer.dart';
 import 'package:analyzer/src/generated/ast.dart';
@@ -30,7 +31,8 @@ class _HtmlInliner extends PolymerTransformer {
   final BuildLogger logger;
   final AssetId docId;
   final seen = new Set<AssetId>();
-  final scriptIds = <AssetId>[];
+  final scriptIds = new LinkedHashSet<AssetId>();
+  final inlinedStylesheetIds = new Set<AssetId>();
   final extractedFiles = new Set<AssetId>();
   bool experimentalBootstrap = false;
   final Element importsWrapper = new Element.html('<div hidden></div>');
@@ -62,7 +64,7 @@ class _HtmlInliner extends PolymerTransformer {
 
       changed = new _UrlNormalizer(transform, docId, logger).visit(document)
         || changed;
-      
+
       experimentalBootstrap = document.querySelectorAll('link').any((link) =>
           link.attributes['rel'] == 'import' &&
           link.attributes['href'] == POLYMER_EXPERIMENTAL_HTML);
@@ -93,7 +95,7 @@ class _HtmlInliner extends PolymerTransformer {
           docId.addExtension('._data'),
           JSON.encode({
             'experimental_bootstrap': experimentalBootstrap,
-            'script_ids': scriptIds,
+            'script_ids': scriptIds.toList(),
           }, toEncodable: (id) => id.serialize())));
 
       // Write out the logs collected by our [BuildLogger].
@@ -135,6 +137,13 @@ class _HtmlInliner extends PolymerTransformer {
         if (!options.shouldInlineStylesheet(id)) return null;
 
         changed = true;
+        if (inlinedStylesheetIds.contains(id)
+            && !options.stylesheetInliningIsOverridden(id)) {
+          logger.warning(
+              CSS_FILE_INLINED_MULTIPLE_TIMES.create({'url': id.path}),
+              span: tag.sourceSpan);
+        }
+        inlinedStylesheetIds.add(id);
         return _inlineStylesheet(id, tag);
       }
     }).then((_) => changed);
@@ -142,7 +151,9 @@ class _HtmlInliner extends PolymerTransformer {
 
   /// To preserve the order of scripts with respect to inlined
   /// link rel=import, we move both of those into the body before we do any
-  /// inlining.
+  /// inlining. We do not start doing this until the first import is found
+  /// however, as some scripts do need to be ran in the head to work
+  /// properly (platform.js for instance).
   ///
   /// Note: we do this for stylesheets as well to preserve ordering with
   /// respect to eachother, because stylesheets can be pulled in transitively
@@ -152,11 +163,14 @@ class _HtmlInliner extends PolymerTransformer {
   // Should we do the same? Alternatively could we inline head into head and
   // body into body and avoid this whole thing?
   void _moveHeadToBody(Document doc) {
+    var foundImport = false;
     for (var node in doc.head.nodes.toList(growable: false)) {
       if (node is! Element) continue;
       var tag = node.localName;
       var type = node.attributes['type'];
       var rel = node.attributes['rel'];
+      if (tag == 'link' && rel == 'import') foundImport = true;
+      if (!foundImport) continue;
       if (tag == 'style' || tag == 'script' &&
             (type == null || type == TYPE_JS || type == TYPE_DART) ||
           tag == 'link' && (rel == 'stylesheet' || rel == 'import')) {
@@ -227,6 +241,13 @@ class _HtmlInliner extends PolymerTransformer {
         script.remove();
         var src = script.attributes['src'];
         var srcId = uriToAssetId(docId, src, logger, script.sourceSpan);
+
+        // No duplicates allowed!
+        if (scriptIds.contains(srcId)) {
+          logger.warning(SCRIPT_INCLUDED_MORE_THAN_ONCE.create({'url': src}),
+              span: script.sourceSpan);
+          return true;
+        }
 
         // We check for extractedFiles because 'hasInput' below is only true for
         // assets that existed before this transformer runs (hasInput is false

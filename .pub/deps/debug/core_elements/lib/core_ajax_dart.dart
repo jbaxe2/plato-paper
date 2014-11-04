@@ -94,10 +94,18 @@ class CoreAjax extends PolymerElement with ChangeNotifier  {
   String get params => __$params; String __$params = ''; @reflectable set params(String value) { __$params = notifyPropertyChange(#params, __$params, value); }
 
   /**
-   * Returns the response object.
+   * The response for the most recently made request, or null if it hasn't
+   * completed yet or the request resulted in error.
    */
   @reflectable @published
   dynamic get response => __$response; dynamic __$response; @reflectable set response(dynamic value) { __$response = notifyPropertyChange(#response, __$response, value); }
+
+  /**
+   * The error for the most recently made request, or null if it hasn't
+   * completed yet or the request resulted in success.
+   */
+  @reflectable @published
+  dynamic get error => __$error; dynamic __$error; @reflectable set error(dynamic value) { __$error = notifyPropertyChange(#error, __$error, value); }
 
   /**
    * The HTTP method to use such as 'GET', 'POST', 'PUT', or 'DELETE'.
@@ -148,12 +156,17 @@ class CoreAjax extends PolymerElement with ChangeNotifier  {
    */
   bool withCredentials = false;
 
+  /**
+   * The currently active request.
+   */
+  HttpRequest activeRequest;
+
   void receive(response, HttpRequest xhr) {
     logger.fine('receive');
     if (this.isSuccess(xhr)) {
       this.processResponse(xhr);
     } else {
-      this.error(xhr);
+      this.processError(xhr);
     }
     this.complete(xhr);
   }
@@ -165,12 +178,18 @@ class CoreAjax extends PolymerElement with ChangeNotifier  {
 
   void processResponse(xhr) {
     var response = this.evalResponse(xhr);
-    this.response = response;
+    if (xhr == this.activeRequest) {
+      this.response = response;
+    }
     this.fire('core-response', detail: {'response': response, 'xhr': xhr});
   }
 
-  void error(xhr) {
+
+  void processError(xhr) {
     var response = '${xhr.status}: ${xhr.responseText}';
+    if (xhr == this.activeRequest) {
+      this.error = response;
+    }
     this.fire('core-error', detail: {'response': response, 'xhr': xhr});
   }
 
@@ -291,7 +310,8 @@ class CoreAjax extends PolymerElement with ChangeNotifier  {
         this.handleAs == 'document') {
       responseType = this.handleAs;
     }
-    return url == null ? null : this.xhr.request(
+    this.response = this.error = null;
+    this.activeRequest = url == null ? null : this.xhr.request(
         url: url,
         method: method,
         headers: headers,
@@ -301,6 +321,7 @@ class CoreAjax extends PolymerElement with ChangeNotifier  {
         responseType: responseType,
         callback: this.receive
     );
+    return this.activeRequest;
   }
 
 }

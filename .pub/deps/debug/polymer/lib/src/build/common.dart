@@ -88,15 +88,19 @@ class TransformOptions {
   /// It will only appear when ![releaseMode] even if this is true.
   final bool injectBuildLogsInOutput;
 
-  /// True to run liner on all html files before starting other phases.
+  /// Rules to determine whether to run liner on an html file.
   // TODO(jmesserly): instead of this flag, we should only run linter on
   // reachable (entry point+imported) html if deploying. See dartbug.com/17199.
-  final bool lint;
+  final LintOptions lint;
+
+  /// This will automatically inject `platform.js` from the `web_components`
+  /// package in all entry points, if it is not already included.
+  final bool injectPlatformJs;
 
   TransformOptions({entryPoints, this.inlineStylesheets,
       this.contentSecurityPolicy: false, this.directlyIncludeJS: true,
-      this.releaseMode: true, this.lint: true,
-      this.injectBuildLogsInOutput: false})
+      this.releaseMode: true, this.lint: const LintOptions(),
+      this.injectBuildLogsInOutput: false, this.injectPlatformJs: true})
       : entryPoints = entryPoints == null ? null
           : entryPoints.map(systemToAssetPath).toList();
 
@@ -126,6 +130,48 @@ class TransformOptions {
     // Then check the global default setting.
     var globalDefault = inlineStylesheets['default'];
     return (globalDefault != null) ? globalDefault : true;
+  }
+
+  // Whether a stylesheet with [id] has an overriden inlining setting.
+  bool stylesheetInliningIsOverridden(AssetId id) {
+    return inlineStylesheets != null &&
+        (inlineStylesheets.containsKey(id.toString())
+          || inlineStylesheets.containsKey(id.path));
+  }
+}
+
+class LintOptions {
+  /// Whether lint is enabled.
+  final bool enabled;
+
+  /// Patterns explicitly included/excluded from linting (if any).
+  final List<RegExp> patterns;
+
+  /// When [patterns] is not null, whether they denote inclusion or exclusion.
+  final bool isInclude;
+
+  const LintOptions()
+      : enabled = true, patterns = null, isInclude = true;
+  const LintOptions.disabled()
+      : enabled = false, patterns = null, isInclude = true;
+
+  LintOptions.include(List<String> patterns)
+      : enabled = true,
+        isInclude = true,
+        patterns = patterns.map((s) => new RegExp(s)).toList();
+
+  LintOptions.exclude(List<String> patterns)
+      : enabled = true,
+        isInclude = false,
+        patterns = patterns.map((s) => new RegExp(s)).toList();
+
+  bool shouldLint(String fileName) {
+    if (!enabled) return false;
+    if (patterns == null) return isInclude;
+    for (var pattern in patterns) {
+      if (pattern.hasMatch(fileName)) return isInclude;
+    }
+    return !isInclude;
   }
 }
 

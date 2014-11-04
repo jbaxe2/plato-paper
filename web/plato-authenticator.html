@@ -35,17 +35,15 @@
 
       <paper-button
         style="background-color: #537ba4;"
-        label="authenticate"
         icon="lock-outline"
-        raisedButton
-        on-click="{{signalAuthentication}}"></paper-button>
+        raised
+        on-click="{{signalAuthentication}}">Authenticate</paper-button>
 
       <paper-button
         style="background-color: #537ba4; margin-left: 0px; margin-right: 0px;"
-        label="clear"
         icon="rotate-left"
-        raisedButton
-        on-click="{{clearAuthentication}}"></paper-button>
+        raised
+        on-click="{{clearAuthentication}}">Clear</paper-button>
 
       <paper-toast id="authToast"></paper-toast>
     </div>

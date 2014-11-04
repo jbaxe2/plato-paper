@@ -15,7 +15,8 @@ class PlatoAssociationMaker extends PolymerElement {
   @observable String nodeId = '';
   @observable String associationKey;
 
-  PlatoAssociationMaker.created() : super.created() {}
+  /// The [PlatoAssociationMaker.created] constructor...
+  PlatoAssociationMaker.created() : super.created();
 
   /// The [handleItemIdChange] and [handleNodeIdChange] methods help as a workaround
   /// for a bug within the [paper_elements] package, whereby two-way data binding is

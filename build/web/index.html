@@ -1,4 +1,5 @@
 <!DOCTYPE html><html><head><script src="packages/web_components/platform.js"></script>
+<script src="packages/web_components/dart_support.js"></script>
 
     <title>Plato Paper v0.0.01 (prototyping)</title>
 
@@ -6,8 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Joseph B. Axenroth">
     <meta name="description" content="Plato Paper v0.0.01, prototyping written in Dart Polymer.">
-
-    
 
     <!-- Start of importing Plato Paper 'raw' components. -->
     
@@ -29,6 +28,7 @@
 
     <!-- Start of importing Plato Paper modules. -->
     
+    
     <!-- End of importing Plato Paper modules. -->
 
     
@@ -36,7 +36,7 @@
 
     
   </head>
-  <body unresolved=""><div hidden=""><script src="packages/web_components/dart_support.js"></script><style shim-shadowdom="">
+  <body unresolved=""><div hidden=""><style shim-shadowdom="">
 /*******************************
           Flex Layout
 *******************************/
@@ -328,6 +328,9 @@ html /deep/ [segment], html /deep/ segment {
 -->
 
 
+<script src="packages/web_components/interop_support.js"></script>
+
+<!-- Dart note: load polymer for Dart and JS from the same place -->
 
 <script>
 // This empty script is here to workaround issue
@@ -1167,11 +1170,7 @@ html /deep/ core-icon {
 
 
 
-<script>
-// This empty script is here to workaround issue
-// https://github.com/dart-lang/core-elements/issues/11
-</script>
-
+<!-- Dart note: load polymer for Dart and JS from the same place -->
 
 <script>
 // This empty script is here to workaround issue
@@ -1179,130 +1178,10 @@ html /deep/ core-icon {
 </script>
 
 
-<polymer-element name="paper-focusable" attributes="active focused disabled isToggle" tabindex="0" on-down="{{downAction}}" on-up="{{upAction}}" on-focus="{{focusAction}}" on-blur="{{blurAction}}" on-contextmenu="{{contextMenuAction}}">
-
-  <template>
-    <style>
-      :host([disabled]) {
-        pointer-events: none;
-      }
-    </style>
-    <content></content>
-  </template>
-
-  <script>
-    Polymer('paper-focusable', {
-
-      publish: {
-
-        /**
-         * If true, the button is currently active either because the
-         * user is holding down the button, or the button is a toggle
-         * and is currently in the active state.
-         *
-         * @attribute active
-         * @type boolean
-         * @default false
-         */
-        active: {value: false, reflect: true},
-
-        /**
-         * If true, the element currently has focus due to keyboard
-         * navigation.
-         *
-         * @attribute focused
-         * @type boolean
-         * @default false
-         */
-        focused: {value: false, reflect: true},
-
-        /**
-         * If true, the user is currently holding down the button.
-         *
-         * @attribute pressed
-         * @type boolean
-         * @default false
-         */
-        pressed: {value: false, reflect: true},
-
-        /**
-         * If true, the user cannot interact with this element.
-         *
-         * @attribute disabled
-         * @type boolean
-         * @default false
-         */
-        disabled: {value: false, reflect: true},
-
-        /**
-         * If true, the button toggles the active state with each tap.
-         * Otherwise, the button becomes active when the user is holding
-         * it down.
-         *
-         * @attribute isToggle
-         * @type boolean
-         * @default false
-         */
-        isToggle: {value: false, reflect: false}
-
-      },
-
-      disabledChanged: function() {
-        if (this.disabled) {
-          this.removeAttribute('tabindex');
-        } else {
-          this.setAttribute('tabindex', 0);
-        }
-      },
-
-      downAction: function() {
-        this.pressed = true;
-        this.focused = false;
-
-        if (this.isToggle) {
-          this.active = !this.active;
-        } else {
-          this.active = true;
-        }
-      },
-
-      // Pulling up the context menu for an item should focus it; but we need to
-      // be careful about how we deal with down/up events surrounding context
-      // menus. The up event typically does not fire until the context menu
-      // closes: so we focus immediately.
-      //
-      // This fires _after_ downAction.
-      contextMenuAction: function(e) {
-        // Note that upAction may fire _again_ on the actual up event.
-        this.upAction(e);
-        this.focusAction();
-      },
-
-      upAction: function() {
-        this.pressed = false;
-
-        if (!this.isToggle) {
-          this.active = false;
-        }
-      },
-
-      focusAction: function() {
-        if (!this.pressed) {
-          // Only render the "focused" state if the element gains focus due to
-          // keyboard navigation.
-          this.focused = true;
-        }
-      },
-
-      blurAction: function() {
-        this.focused = false;
-      }
-
-    });
-
-  </script>
-</polymer-element>
-
+<script>
+// This empty script is here to workaround issue
+// https://github.com/dart-lang/core-elements/issues/11
+</script>
 
 
 <polymer-element name="paper-ripple" attributes="initialOpacity opacityDecayVelocity">
@@ -1313,9 +1192,15 @@ html /deep/ core-icon {
     :host {
       display: block;
       position: relative;
+      border-radius: inherit;
+      overflow: hidden;
     }
 
-    #canvas {
+    :host-context([noink]) {
+      pointer-events: none;
+    }
+
+    #bg, #waves, .wave-container, .wave {
       pointer-events: none;
       position: absolute;
       top: 0;
@@ -1324,11 +1209,32 @@ html /deep/ core-icon {
       height: 100%;
     }
 
-    :host(.circle) #canvas {
+    #bg, .wave {
+      opacity: 0;
+    }
+
+    #waves, .wave {
+      overflow: hidden;
+    }
+
+    .wave-container, .wave {
       border-radius: 50%;
     }
 
+    :host(.circle) #bg,
+    :host(.circle) #waves {
+      border-radius: 50%;
+    }
+
+    :host(.circle) .wave-container {
+      overflow: hidden;
+    }
+
   </style>
+
+  <div id="bg"></div>
+  <div id="waves">
+  </div>
 
 </template>
 <script>
@@ -1381,34 +1287,39 @@ html /deep/ core-icon {
     // Determines whether the wave should be completely removed.
     function waveDidFinish(wave, radius, anim) {
       var waveOpacity = waveOpacityFn(wave.tDown, wave.tUp, anim);
+
       // If the wave opacity is 0 and the radius exceeds the bounds
       // of the element, then this is finished.
-      if (waveOpacity < 0.01 && radius >= Math.min(wave.maxRadius, waveMaxRadius)) {
-        return true;
-      }
-      return false;
+      return waveOpacity < 0.01 && radius >= Math.min(wave.maxRadius, waveMaxRadius);
     };
 
     function waveAtMaximum(wave, radius, anim) {
       var waveOpacity = waveOpacityFn(wave.tDown, wave.tUp, anim);
-      if (waveOpacity >= anim.initialOpacity && radius >= Math.min(wave.maxRadius, waveMaxRadius)) {
-        return true;
-      }
-      return false;
+
+      return waveOpacity >= anim.initialOpacity && radius >= Math.min(wave.maxRadius, waveMaxRadius);
     }
 
     //
     // DRAWING
     //
-    function drawRipple(ctx, x, y, radius, innerColor, outerColor) {
-      if (outerColor) {
-        ctx.fillStyle = outerColor;
-        ctx.fillRect(0,0,ctx.canvas.width, ctx.canvas.height);
+    function drawRipple(ctx, x, y, radius, innerAlpha, outerAlpha) {
+      // Only animate opacity and transform
+      if (outerAlpha !== undefined) {
+        ctx.bg.style.opacity = outerAlpha;
       }
-      ctx.beginPath();
-      ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
-      ctx.fillStyle = innerColor;
-      ctx.fill();
+      ctx.wave.style.opacity = innerAlpha;
+
+      var s = radius / (ctx.containerSize / 2);
+      var dx = x - (ctx.containerWidth / 2);
+      var dy = y - (ctx.containerHeight / 2);
+
+      ctx.wc.style.webkitTransform = 'translate3d(' + dx + 'px,' + dy + 'px,0)';
+      ctx.wc.style.transform = 'translate3d(' + dx + 'px,' + dy + 'px,0)';
+
+      // 2d transform for safari because of border-radius and overflow:hidden clipping bug.
+      // https://bugs.webkit.org/show_bug.cgi?id=98538
+      ctx.wave.style.webkitTransform = 'scale(' + s + ',' + s + ')';
+      ctx.wave.style.transform = 'scale3d(' + s + ',' + s + ',1)';
     }
 
     //
@@ -1418,7 +1329,23 @@ html /deep/ core-icon {
       var elementStyle = window.getComputedStyle(elem);
       var fgColor = elementStyle.color;
 
+      var inner = document.createElement('div');
+      inner.style.backgroundColor = fgColor;
+      inner.classList.add('wave');
+
+      var outer = document.createElement('div');
+      outer.classList.add('wave-container');
+      outer.appendChild(inner);
+
+      var container = elem.$.waves;
+      container.appendChild(outer);
+
+      elem.$.bg.style.backgroundColor = fgColor;
+
       var wave = {
+        bg: elem.$.bg,
+        wc: outer,
+        wave: inner,
         waveColor: fgColor,
         maxRadius: 0,
         isMouseDown: false,
@@ -1434,6 +1361,8 @@ html /deep/ core-icon {
       if (scope.waves) {
         var pos = scope.waves.indexOf(wave);
         scope.waves.splice(pos, 1);
+        // FIXME cache nodes
+        wave.wc.remove();
       }
     };
 
@@ -1495,37 +1424,12 @@ html /deep/ core-icon {
         up: 'upAction'
       },
 
-      attached: function() {
-        // create the canvas element manually becase ios
-        // does not render the canvas element if it is not created in the
-        // main document (component templates are created in a
-        // different document). See:
-        // https://bugs.webkit.org/show_bug.cgi?id=109073.
-        if (!this.$.canvas) {
-          var canvas = document.createElement('canvas');
-          canvas.id = 'canvas';
-          this.shadowRoot.appendChild(canvas);
-          this.$.canvas = canvas;
-        }
-      },
-
       ready: function() {
         this.waves = [];
       },
 
-      setupCanvas: function() {
-        this.$.canvas.setAttribute('width', this.$.canvas.clientWidth * this.pixelDensity + "px");
-        this.$.canvas.setAttribute('height', this.$.canvas.clientHeight * this.pixelDensity + "px");
-        var ctx = this.$.canvas.getContext('2d');
-        ctx.scale(this.pixelDensity, this.pixelDensity);
-        if (!this._loop) {
-          this._loop = this.animate.bind(this, ctx);
-        }
-      },
-
       downAction: function(e) {
-        this.setupCanvas();
-        var wave = createWave(this.$.canvas);
+        var wave = createWave(this);
 
         this.cancelled = false;
         wave.isMouseDown = true;
@@ -1534,9 +1438,9 @@ html /deep/ core-icon {
         wave.mouseUpStart = 0.0;
         wave.mouseDownStart = now();
 
-        var width = this.$.canvas.width / 2; // Retina canvas
-        var height = this.$.canvas.height / 2;
         var rect = this.getBoundingClientRect();
+        var width = rect.width;
+        var height = rect.height;
         var touchX = e.x - rect.left;
         var touchY = e.y - rect.top;
 
@@ -1547,9 +1451,26 @@ html /deep/ core-icon {
           wave.slideDistance = dist(wave.startPosition, wave.endPosition);
         }
         wave.containerSize = Math.max(width, height);
+        wave.containerWidth = width;
+        wave.containerHeight = height;
         wave.maxRadius = distanceFromPointToFurthestCorner(wave.startPosition, {w: width, h: height});
+
+        // The wave is circular so constrain its container to 1:1
+        wave.wc.style.top = (wave.containerHeight - wave.containerSize) / 2 + 'px';
+        wave.wc.style.left = (wave.containerWidth - wave.containerSize) / 2 + 'px';
+        wave.wc.style.width = wave.containerSize + 'px';
+        wave.wc.style.height = wave.containerSize + 'px';
+
         this.waves.push(wave);
-        requestAnimationFrame(this._loop);
+
+        if (!this._loop) {
+          this._loop = this.animate.bind(this, {
+            width: width,
+            height: height
+          });
+          requestAnimationFrame(this._loop);
+        }
+        // else there is already a rAF
       },
 
       upAction: function() {
@@ -1574,9 +1495,6 @@ html /deep/ core-icon {
       animate: function(ctx) {
         var shouldRenderNextFrame = false;
 
-        // Clear the canvas
-        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
         var deleteTheseWaves = [];
         // The oldest wave's touch down duration
         var longestTouchDownDuration = 0;
@@ -1587,8 +1505,8 @@ html /deep/ core-icon {
         var anim = {
           initialOpacity: this.initialOpacity,
           opacityDecayVelocity: this.opacityDecayVelocity,
-          height: ctx.canvas.height,
-          width: ctx.canvas.width
+          height: ctx.height,
+          width: ctx.width
         }
 
         for (var i = 0; i < this.waves.length; i++) {
@@ -1620,7 +1538,7 @@ html /deep/ core-icon {
           // Ripple gravitational pull to the center of the canvas.
           if (wave.endPosition) {
 
-            // This translates from the origin to the center of the view  based on the max dimension of  
+            // This translates from the origin to the center of the view  based on the max dimension of
             var translateFraction = Math.min(1, radius / wave.containerSize * 2 / Math.sqrt(2) );
 
             x += translateFraction * (wave.endPosition.x - wave.startPosition.x);
@@ -1635,13 +1553,14 @@ html /deep/ core-icon {
           }
 
           // Draw the ripple.
-          drawRipple(ctx, x, y, radius, waveColor, bgFillColor);
+          drawRipple(wave, x, y, radius, waveAlpha, bgFillAlpha);
 
           // Determine whether there is any more rendering to be done.
           var maximumWave = waveAtMaximum(wave, radius, anim);
           var waveDissipated = waveDidFinish(wave, radius, anim);
           var shouldKeepWave = !waveDissipated || maximumWave;
-          var shouldRenderWaveAgain = !waveDissipated && !maximumWave;
+          // keep rendering dissipating wave when at maximum radius on upAction
+          var shouldRenderWaveAgain = wave.mouseUpStart ? !waveDissipated : !maximumWave;
           shouldRenderNextFrame = shouldRenderNextFrame || shouldRenderWaveAgain;
           if (!shouldKeepWave || this.cancelled) {
             deleteTheseWaves.push(wave);
@@ -1657,11 +1576,11 @@ html /deep/ core-icon {
           removeWaveFromScope(this, wave);
         }
 
-        if (!this.waves.length) {
-          // If there is nothing to draw, clear any drawn waves now because
-          // we're not going to get another requestAnimationFrame any more.
-          ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        if (!this.waves.length && this._loop) {
+          // clear the background color
+          this.$.bg.style.backgroundColor = null;
           this._loop = null;
+          this.fire('core-transitionend');
         }
       }
 
@@ -1930,212 +1849,139 @@ html /deep/ core-icon {
 </polymer-element>
 
 
-<polymer-element name="paper-button" extends="paper-focusable" attributes="label raisedButton iconSrc icon" role="button">
+
+
+
+<polymer-element name="paper-focusable" attributes="active focused disabled isToggle" tabindex="0" on-down="{{downAction}}" on-up="{{upAction}}" on-focus="{{focusAction}}" on-blur="{{blurAction}}" on-contextmenu="{{contextMenuAction}}">
 
   <template>
-
-    <style>/*
- * @license
- * Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
- * This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
- * The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
- * The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
- * Code distributed by Google as part of the polymer project is also
- * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
- */
-
-:host {
-  display: inline-block;
-  position: relative;
-  border: 0;
-  background: transparent;
-  text-align: center;
-  font: inherit;
-  text-transform: uppercase;
-  outline: none;
-  border-radius: 3px;
-  -webkit-user-select: none;
-  user-select: none;
-  cursor: pointer;
-}
-
-:host(.hover:hover) {
-  background: #e4e4e4;
-}
-
-:host([raisedButton]) {
-  background: #dfdfdf;
-}
-
-:host([raisedButton].hover:hover) {
-  background: #d6d6d6;
-}
-
-:host([disabled]) {
-  background: #eaeaea !important;
-  color: #a8a8a8 !important;
-  cursor: auto;
-}
-
-#shadow-container {
-  border-radius: inherit;
-}
-
-#clip {
-  position: relative;
-  border-radius: inherit;
-  overflow: hidden;
-}
-
-/*
-#focusBg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  opacity: 0;
-  border-radius: inherit;
-  background: #c3c3c3;
-  -webkit-transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-:host([focused]) #focusBg {
-  -webkit-transition: none;
-  transition: none;
-  -webkit-animation: focus-fade 0.7s infinite alternate;
-  animation: focus-fade 0.7s infinite alternate;
-}
-
-@-webkit-keyframes focus-fade {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-@keyframes focus-fade {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-*/
-
-#ripple {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  color: #d1d1d1;
-  pointer-events: none;
-}
-
-:host([raisedButton]) #ripple {
-  color: #cecece;
-}
-
-#ripple::shadow canvas {
-  top: 0;
-  left: 0;
-}
-
-#content {
-  /* needed to position the ink behind the content */
-  position: relative;
-}
-
-#icon {
-  margin: 8px;
-}
-
-#content > span {
-  display: inline-block;
-  margin: 0.5em;
-}</style>
-
-    <template if="{{raisedButton}}">
-      <div fit="" id="shadow-container">
-        <paper-shadow id="shadow" z="{{z}}" animated=""></paper-shadow>
-      </div>
-    </template>
-
-    <div id="clip">
-      <!-- <div id="focusBg"></div> -->
-      <paper-ripple id="ripple"></paper-ripple>
-      <div id="content">
-        <template if="{{iconSrc || icon}}">
-          <core-icon id="icon" src="{{iconSrc}}" icon="{{icon}}"></core-icon>
-        </template>
-        <template if="{{label}}">
-          <span>{{label}}</span>
-        </template>
-      </div>
-    </div>
-
+    <style>
+      :host([disabled]) {
+        pointer-events: none;
+      }
+    </style>
+    <content></content>
   </template>
 
   <script>
-    Polymer('paper-button', {
+    Polymer('paper-focusable', {
 
       publish: {
 
         /**
-         * The label of the button.
+         * If true, the button is currently active either because the
+         * user is holding down the button, or the button is a toggle
+         * and is currently in the active state.
          *
-         * @attribute label
-         * @type string
-         * @default ''
-         */
-        label: '',
-
-        /**
-         * If true, the button will be styled as a "raised" button.
-         *
-         * @attribute raisedButton
+         * @attribute active
          * @type boolean
          * @default false
          */
-        raisedButton: {value: false, reflect: true},
+        active: {value: false, reflect: true},
 
         /**
-         * (optional) The URL of an image for an icon to use in the button.
-         * Should not use `icon` property if you are using this property.
+         * If true, the element currently has focus due to keyboard
+         * navigation.
          *
-         * @attribute iconSrc
-         * @type string
-         * @default ''
+         * @attribute focused
+         * @type boolean
+         * @default false
          */
-         iconSrc: '',
+        focused: {value: false, reflect: true},
 
-         /**
-          * (optional) Specifies the icon name or index in the set of icons
-          * available in the icon set. If using this property, load the icon
-          * set separately where the icon is used. Should not use `src`
-          * if you are using this property.
-          *
-          * @attribute icon
-          * @type string
-          * @default ''
-          */
-         icon: ''
+        /**
+         * If true, the user is currently holding down the button.
+         *
+         * @attribute pressed
+         * @type boolean
+         * @default false
+         */
+        pressed: {value: false, reflect: true},
+
+        /**
+         * If true, the user cannot interact with this element.
+         *
+         * @attribute disabled
+         * @type boolean
+         * @default false
+         */
+        disabled: {value: false, reflect: true},
+
+        /**
+         * If true, the button toggles the active state with each tap.
+         * Otherwise, the button becomes active when the user is holding
+         * it down.
+         *
+         * @attribute isToggle
+         * @type boolean
+         * @default false
+         */
+        isToggle: {value: false, reflect: false}
 
       },
 
-      z: 1,
-
-      attached: function() {
-        if (this.textContent && this.textContent.match(/\S+/)) {
-          console.warn('Using textContent to label the button is deprecated. Use the "label" property instead');
-          this.label = this.textContent;
+      disabledChanged: function() {
+        if (this.disabled) {
+          this.removeAttribute('tabindex');
+        } else {
+          this.setAttribute('tabindex', 0);
         }
       },
+
+      downAction: function() {
+        this.pressed = true;
+
+        if (this.isToggle) {
+          this.active = !this.active;
+        } else {
+          this.active = true;
+        }
+      },
+
+      // Pulling up the context menu for an item should focus it; but we need to
+      // be careful about how we deal with down/up events surrounding context
+      // menus. The up event typically does not fire until the context menu
+      // closes: so we focus immediately.
+      //
+      // This fires _after_ downAction.
+      contextMenuAction: function(e) {
+        // Note that upAction may fire _again_ on the actual up event.
+        this.upAction(e);
+        this.focusAction();
+      },
+
+      upAction: function() {
+        this.pressed = false;
+
+        if (!this.isToggle) {
+          this.active = false;
+        }
+      },
+
+      focusAction: function() {
+        if (!this.pressed) {
+          // Only render the "focused" state if the element gains focus due to
+          // keyboard navigation.
+          this.focused = true;
+        }
+      },
+
+      blurAction: function() {
+        this.focused = false;
+      }
+
+    });
+
+  </script>
+</polymer-element>
+
+
+<polymer-element name="paper-button-base" extends="paper-focusable">
+
+  <script>
+    Polymer({
+
+      z: 1,
 
       activeChanged: function() {
         this.super();
@@ -2156,59 +2002,175 @@ html /deep/ core-icon {
         this.adjustZ();
       },
 
-      focusedChanged: function() {
-        this.super();
-        this.adjustZ();
-      },
-
       disabledChanged: function() {
         this.super();
+        if (this.disabled) {
+          this.setAttribute('aria-disabled', '');
+        } else {
+          this.removeAttribute('aria-disabled');
+        }
         this.adjustZ();
       },
 
-      // waitForSpillCompleted: function(callback) {
-      //   this.async(callback, null, (this.$.ink.spillCompleted ? 0 : this.duration));
-      // },
+      recenteringTouchChanged: function() {
+        if (this.$.ripple) {
+          this.$.ripple.classList.toggle('recenteringTouch', this.recenteringTouch);
+        }
+      },
 
-      // resetInk: function() {
-      //   this.active = false;
-      //   this.$.ink.reset();
-      // },
-
-      insideButton: function(x, y) {
-        var rect = this.getBoundingClientRect();
-        return (rect.left <= x) && (x <= rect.right) && (rect.top <= y) && (y <= rect.bottom);
+      fillChanged: function() {
+        if (this.$.ripple) {
+          this.$.ripple.classList.toggle('fill', this.fill);
+        }
       },
 
       adjustZ: function() {
-        if (this.focused) {
-          this.classList.add('paper-shadow-animate-z-1-z-2');
+        if (this.active) {
+          this.z = 2;
+        } else if (this.disabled) {
+          this.z = 0;
         } else {
-          this.classList.remove('paper-shadow-animate-z-1-z-2');
-
-          if (this.active) {
-            this.z = 2;
-          } else if (this.disabled) {
-            this.z = 0;
-          } else {
-            this.z = 1;
-          }
-
+          this.z = 1;
         }
       },
 
       downAction: function(e) {
         this.super(e);
         this.lastEvent = e;
-      },
-
-      labelChanged: function() {
-        this.setAttribute('aria-label', this.label);
+        if (!this.$.ripple) {
+          var ripple = document.createElement('paper-ripple');
+          ripple.setAttribute('id', 'ripple');
+          ripple.setAttribute('fit', '');
+          if (this.recenteringTouch) {
+            ripple.classList.add('recenteringTouch');
+          }
+          if (!this.fill) {
+            ripple.classList.add('circle');
+          }
+          this.$.ripple = ripple;
+          this.shadowRoot.insertBefore(ripple, this.shadowRoot.firstChild);
+          // No need to forward the event to the ripple because the ripple
+          // is triggered in activeChanged
+        }
       }
 
     });
   </script>
 </polymer-element>
+
+
+<polymer-element name="paper-button" extends="paper-button-base" attributes="raised recenteringTouch fill" role="button">
+
+  <template>
+
+    <style>
+
+      :host {
+        display: inline-block;
+        position: relative;
+        box-sizing: border-box;
+        min-width: 5.14em;
+        padding: 0.7em 0.57em;
+        margin: 0 0.29em;
+        background: transparent;
+        text-align: center;
+        font: inherit;
+        text-transform: uppercase;
+        outline: none;
+        border-radius: 3px;
+        -webkit-user-select: none;
+        user-select: none;
+        cursor: pointer;
+        z-index: 0;
+      }
+
+      :host([disabled]) {
+        background: #eaeaea !important;
+        color: #a8a8a8 !important;
+        cursor: auto;
+        pointer-events: none;
+      }
+
+      ::content * {
+        text-transform: inherit;
+      }
+
+      #ripple {
+        pointer-events: none;
+        z-index: -1;
+      }
+
+    </style>
+
+    <template if="{{raisedButton || raised}}">
+      <paper-shadow id="shadow" z="{{z}}" animated=""></paper-shadow>
+    </template>
+
+    <!-- this div is needed to position the ripple behind text content -->
+    <div relative="">
+      <content></content>
+      {{label}}
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      publish: {
+
+        label: '',
+
+        /**
+         * If true, the button will be styled with a shadow.
+         *
+         * @attribute raised
+         * @type boolean
+         * @default false
+         */
+        raised: false,
+        raisedButton: false,
+
+        /**
+         * By default the ripple emanates from where the user touched the button.
+         * Set this to true to always center the ripple.
+         *
+         * @attribute recenteringTouch
+         * @type boolean
+         * @default false
+         */
+        recenteringTouch: false,
+
+        /**
+         * By default the ripple expands to fill the button. Set this to true to
+         * constrain the ripple to a circle within the button.
+         *
+         * @attribute fill
+         * @type boolean
+         * @default true
+         */
+        fill: true
+
+      },
+
+      labelChanged: function() {
+        if (this.label) {
+          console.warn('The "label" property is deprecated.');
+        }
+      },
+
+      raisedButtonChanged: function() {
+        if (this.raisedButton) {
+          console.warn('The "raisedButton" property is deprecated.');
+        }
+      }
+
+    });
+  </script>
+</polymer-element>
+
+
+
 
 
 
@@ -2273,16 +2235,12 @@ textarea {
   resize: none;
 }
 
-textarea[fit] {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+textarea[rows=fit] {
+  height: 100%;
 }</style>
 
     <template if="{{multiline}}">
-      <textarea id="input" value="{{inputValue}}" rows="{{rows}}" fit?="{{rows === 'fit'}}" disabled?="{{disabled}}" placeholder="{{placeholder}}" autofocus?="{{autofocus}}" required?="{{required}}" readonly?="{{readonly}}" maxlength="{{maxlength}}" aria-label="{{label || placeholder}}" aria-invalid="{{invalid}}" on-change="{{inputChangeAction}}" on-focus="{{inputFocusAction}}" on-blur="{{inputBlurAction}}"></textarea>
+      <textarea id="input" value="{{inputValue}}" rows="{{rows}}" disabled?="{{disabled}}" placeholder="{{placeholder}}" autofocus?="{{autofocus}}" required?="{{required}}" readonly?="{{readonly}}" maxlength="{{maxlength}}" aria-label="{{label || placeholder}}" aria-invalid="{{invalid}}" on-change="{{inputChangeAction}}" on-focus="{{inputFocusAction}}" on-blur="{{inputBlurAction}}"></textarea>
     </template>
 
     <template if="{{!multiline}}">
@@ -2681,7 +2639,7 @@ textarea[fit] {
        * Forwards to the internal input / textarea element and updates state.
        *
        * @method setCustomValidity
-       * @param {number} message
+       * @param {String} message
        */
       setCustomValidity: function(message) {
         this.$.input.setCustomValidity(message);
@@ -3025,6 +2983,22 @@ Polymer('core-style', {
 
   <template>
 
+    <!--
+    Input tests:
+
+    - set value to integer 0
+    - various html5 input types
+    - sizing:
+      - single-line: size with CSS
+      - single-line: can fit to container
+      - multi-line: size with CSS
+      - multi-line: size with rows
+      - multi-line: can fit to container
+      - multi-line: grows with typing
+      - multi-line: max rows
+      - multi-line: max rows, scrolls after
+    -->
+
     <style>/*
  * @license
  * Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
@@ -3047,25 +3021,14 @@ Polymer('core-style', {
 :host /deep/ textarea {
   font: inherit;
   color: #000;
-  /* fit to the container for auto-resizing */
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
   padding: 0;
-  /* Important to use margin here so the margin remains visible
-   * when textarea scrolls internally. */
-  margin: 0.5em 0 0.25em;
+  margin: 0;
   background-color: transparent;
   border: none;
   outline: none;
+  /* see comments in template */
   width: 100%;
-}
-
-:host /deep/ input::hover,
-:host /deep/ textarea::hover {
-  cursor: text;
+  height: 100%;
 }
 
 input:invalid,
@@ -3075,7 +3038,6 @@ textarea:invalid {
 
 textarea {
   resize: none;
-  overflow: hidden;
 }
 
 [invisible] {
@@ -3142,6 +3104,15 @@ textarea {
   transform: translate3d(3em,0,0) scale3d(50,1,1);
 }
 
+.input-container {
+  position: absolute;
+  /* simulate padding so the input/textarea can use 100% width/height */
+  top: 0.5em;
+  right: 0;
+  bottom: 0.25em;
+  left: 0;
+}
+
 .underline {
   height: 0px;
   overflow: visible;
@@ -3185,8 +3156,10 @@ textarea {
       <span id="floatedLabelText" class="label-text">{{label}}</span>
     </div>
 
-    <div flex="" auto="" relative="" on-down="{{downAction}}" on-up="{{upAction}}">
+    <!-- <div class="input-body" flex auto relative on-down="{{downAction}}" on-up="{{upAction}}"> -->
+    <div class="input-body" flex="" auto="" relative="">
 
+      <!-- the mirror sizes the input/textarea so it grows with typing -->
       <div id="mirror" class="mirror-text" invisible="" aria-hidden="true"></div>
 
       <div class="label" fit="" aria-hidden="true">
@@ -3196,7 +3169,10 @@ textarea {
 
       <div class="cursor" invisible?="{{!cursorAnimated}}" animated?="{{cursorAnimated}}"></div>
 
-      <shadow></shadow>
+      <!-- size the input/textarea with a div, because the textarea has intrinsic size in ff -->
+      <div class="input-container" on-down="{{downAction}}" on-up="{{upAction}}">
+        <shadow></shadow>
+      </div>
 
     </div>
 
@@ -3657,10 +3633,15 @@ presses the escape key. This behavior can be turned off via the
     </core-overlay>
 
 `core-overlay` will automatically size and position itself according to the 
-following rules. If the target's style.top and style.left are unset, the 
-target will be centered. The size of the target is constrained to be no larger
-than the window dimensions. The `margin` property specifies the extra amount
-of space that should be reserved around the overlay. This can be used to ensure
+following rules. The overlay's size is constrained such that it does not
+overflow the screen. This is done by setting maxHeight/maxWidth on the 
+`sizingTarget`. If the `sizingTarget` already has a setting for one of these
+properties, it will not be overridden. The overlay should
+be positioned via css or imperatively using the `core-overlay-position` event.
+If the overlay is not positioned vertically via setting `top` or `bottom`, it
+will be centered vertically. The same is true horizontally via a setting to 
+`left` or `right`. In addition, css `margin` can be used to provide some space
+around the overlay. This can be used to ensure
 that, for example, a drop shadow is always visible around the overlay.
 
 @group Core Elements
@@ -3683,6 +3664,20 @@ Fired when the `core-overlay` has completely opened.
 Fired when the `core-overlay` has completely closed.
 
 @event core-overlay-close-completed
+-->
+<!--
+Fired when the `core-overlay` needs to position itself. Optionally, implement
+in order to position an overlay via code. If the overlay was not otherwise
+positioned, it's important to indicate how the overlay has been positioned by
+setting the `dimensions.position` object. For example, if the overlay has been
+positioned via setting `right` and `top`, set dimensions.position to an
+object like this: `{v: 'top', h: 'right'}`.
+
+@event core-overlay-position
+@param {Object} detail
+@param {Object} detail.target the overlay target
+@param {Object} detail.sizingTarget the overlay sizing target
+@param {Object} detail.opened the opened state
 -->
 <style>
   .core-overlay-backdrop {
@@ -3775,6 +3770,16 @@ Fired when the `core-overlay` has completely closed.
       autoCloseDisabled: false,
 
       /**
+       * By default an overlay will focus its target or an element inside
+       * it with the `autoFocus` attribute. Disable this
+       * behavior by setting the `autoFocusDisabled` property to true.
+       * @attribute autoFocusDisabled
+       * @type boolean
+       * @default false
+       */
+      autoFocusDisabled: false,
+
+      /**
        * This property specifies an attribute on elements that should
        * close the overlay on tap. Should not set `closeSelector` if this
        * is set.
@@ -3795,18 +3800,6 @@ Fired when the `core-overlay` has completely closed.
        * @default ""
        */
       closeSelector: '',
-
-      /**
-       * A `core-overlay` target's size is constrained to the window size.
-       * The `margin` property specifies a pixel amount around the overlay 
-       * that will be reserved. It's useful for ensuring that, for example, 
-       * a shadow displayed outside the target will always be visible.
-       *
-       * @attribute margin
-       * @type number
-       * @default 0
-       */
-      margin: 0,
 
       /**
        * The transition property specifies a string which identifies a 
@@ -3881,6 +3874,7 @@ Fired when the `core-overlay` has completely closed.
         }
         this.addElementListenerList(this.target, this.targetListeners);
         this.target.style.display = 'none';
+        this.target.__overlaySetup = false;
       }
       if (old) {
         this.removeElementListenerList(old, this.targetListeners);
@@ -3895,11 +3889,24 @@ Fired when the `core-overlay` has completely closed.
       }
     },
 
+    transitionChanged: function(old) {
+      if (!this.target) {
+        return;
+      }
+      if (old) {
+        this.getTransition(old).teardown(this.target);
+      }
+      this.target.__overlaySetup = false;
+    },
+
     // NOTE: wait to call this until we're as sure as possible that target
     // is styled.
     ensureTargetSetup: function() {
       if (!this.target || this.target.__overlaySetup) {
         return;
+      }
+      if (!this.sizingTarget) {
+        this.sizingTarget = this.target;
       }
       this.target.__overlaySetup = true;
       this.target.style.display = '';
@@ -3907,29 +3914,25 @@ Fired when the `core-overlay` has completely closed.
       if (transition) {
         transition.setup(this.target);
       }
+      var style = this.target.style;
       var computed = getComputedStyle(this.target);
-      this.targetStyle = {
-        position: computed.position === 'static' ? 'fixed' :
-            computed.position
+      if (computed.position === 'static') {
+        style.position = 'fixed';
       }
-      if (!transition) {
-        this.target.style.position = this.targetStyle.position;
-        this.target.style.outline = 'none';
-      }
-      this.target.style.display = 'none';
+      style.outline = 'none';
+      style.display = 'none';
     },
 
     openedChanged: function() {
       this.transitioning = true;
       this.ensureTargetSetup();
       this.prepareRenderOpened();
-      // continue styling after delay so display state can change
-      // without aborting transitions
-      // note: we wait a full frame so that transition changes executed
-      // during measuring do not cause transition
+      // async here to allow overlay layer to become visible.
       this.async(function() {
         this.target.style.display = '';
-        this.async('renderOpened');
+        // force layout to ensure transitions will go
+        this.target.offsetWidth;
+        this.renderOpened();
       });
       this.fire('core-overlay-open', this.opened);
     },
@@ -3951,20 +3954,14 @@ Fired when the `core-overlay` has completely closed.
           'resizeHandler');
 
       if (this.opened) {
-        // TODO(sorvell): force SD Polyfill to render
-        forcePolyfillRender(this.target);
-        if (!this._shouldPosition) {
-          this.target.style.position = 'absolute';
-          var computed = getComputedStyle(this.target);
-          var t = (computed.top === 'auto' && computed.bottom === 'auto');
-          var l = (computed.left === 'auto' && computed.right === 'auto');
-          this.target.style.position = this.targetStyle.position;
-          this._shouldPosition = {top: t, left: l};
-        }
-        // if we are showing, then take care when measuring
-        this.prepareMeasure(this.target);
+        // force layout so SD Polyfill renders
+        this.target.offsetHeight;
+        this.discoverDimensions();
+        // if we are showing, then take care when positioning
+        this.preparePositioning();
+        this.positionTarget();
         this.updateTargetDimensions();
-        this.finishMeasure(this.target);
+        this.finishPositioning();
         if (this.layered) {
           this.layer.addElement(this.target);
           this.layer.opened = this.opened;
@@ -4033,20 +4030,49 @@ Fired when the `core-overlay` has completely closed.
       }
     },
 
-    prepareMeasure: function(target) {
-      target.style.transition = target.style.webkitTransition = 'none';
-      target.style.transform = target.style.webkitTransform = 'none';
-      target.style.display = '';
+    preparePositioning: function() {
+      this.target.style.transition = this.target.style.webkitTransition = 'none';
+      this.target.style.transform = this.target.style.webkitTransform = 'none';
+      this.target.style.display = '';
     },
 
-    finishMeasure: function(target) {
-      target.style.display = 'none';
-      target.style.transform = target.style.webkitTransform = '';
-      target.style.transition = target.style.webkitTransition = '';
+    discoverDimensions: function() {
+      if (this.dimensions) {
+        return;
+      }
+      var target = getComputedStyle(this.target);
+      var sizer = getComputedStyle(this.sizingTarget);
+      this.dimensions = {
+        position: {
+          v: target.top !== 'auto' ? 'top' : (target.bottom !== 'auto' ?
+            'bottom' : null),
+          h: target.left !== 'auto' ? 'left' : (target.right !== 'auto' ?
+            'right' : null),
+          css: target.position
+        },
+        size: {
+          v: sizer.maxHeight !== 'none',
+          h: sizer.maxWidth !== 'none'
+        },
+        margin: {
+          top: parseInt(target.marginTop) || 0,
+          right: parseInt(target.marginRight) || 0,
+          bottom: parseInt(target.marginBottom) || 0,
+          left: parseInt(target.marginLeft) || 0
+        }
+      };
     },
 
-    getTransition: function() {
-      return this.meta.byId(this.transition);
+    finishPositioning: function(target) {
+      this.target.style.display = 'none';
+      this.target.style.transform = this.target.style.webkitTransform = '';
+      // force layout to avoid application of transform
+      this.target.offsetWidth;
+      this.target.style.transition = this.target.style.webkitTransition = '';
+    },
+
+    getTransition: function(name) {
+      return this.meta.byId(name || this.transition);
     },
 
     getFocusNode: function() {
@@ -4056,7 +4082,9 @@ Fired when the `core-overlay` has completely closed.
     applyFocus: function() {
       var focusNode = this.getFocusNode();
       if (this.opened) {
-        focusNode.focus();
+        if (!this.autoFocusDisabled) {
+          focusNode.focus();
+        }
       } else {
         focusNode.blur();
         if (currentOverlay() == this) {
@@ -4067,49 +4095,74 @@ Fired when the `core-overlay` has completely closed.
       }
     },
 
-    updateTargetDimensions: function() {
-      this.positionTarget();
-      this.sizeTarget();
-      //
-      if (this.layered) {
-        var rect = this.target.getBoundingClientRect();
-        this.target.style.top = rect.top + 'px';
-        this.target.style.left = rect.left + 'px';
-        this.target.style.right = this.target.style.bottom = 'auto';
+    positionTarget: function() {
+      // fire positioning event
+      this.fire('core-overlay-position', {target: this.target,
+          sizingTarget: this.sizingTarget, opened: this.opened});
+      if (!this.dimensions.position.v) {
+        this.target.style.top = '0px';
       }
+      if (!this.dimensions.position.h) {
+        this.target.style.left = '0px';
+      }
+    },
+
+    updateTargetDimensions: function() {
+      this.sizeTarget();
+      this.repositionTarget();
     },
 
     sizeTarget: function() {
-      var sizer = this.sizingTarget || this.target;
-      var rect = sizer.getBoundingClientRect();
-      var mt = rect.top === this.margin ? this.margin : this.margin * 2;
-      var ml = rect.left === this.margin ? this.margin : this.margin * 2;
-      var h = window.innerHeight - rect.top - mt;
-      var w = window.innerWidth - rect.left - ml;
-      sizer.style.maxHeight = h + 'px';
-      sizer.style.maxWidth = w + 'px';
-      sizer.style.boxSizing = 'border-box';
+      this.sizingTarget.style.boxSizing = 'border-box';
+      var dims = this.dimensions;
+      var rect = this.target.getBoundingClientRect();
+      if (!dims.size.v) {
+        this.sizeDimension(rect, dims.position.v, 'top', 'bottom', 'Height');
+      }
+      if (!dims.size.h) {
+        this.sizeDimension(rect, dims.position.h, 'left', 'right', 'Width');
+      }
     },
 
-    positionTarget: function() {
-      // vertically and horizontally center if not positioned
-      if (this._shouldPosition.top) {
-        var t = Math.max((window.innerHeight - 
-            this.target.offsetHeight - this.margin*2) / 2, this.margin);
+    sizeDimension: function(rect, positionedBy, start, end, extent) {
+      var dims = this.dimensions;
+      var flip = (positionedBy === end);
+      var m = flip ? start : end;
+      var ws = window['inner' + extent];
+      var o = dims.margin[m] + (flip ? ws - rect[end] : 
+          rect[start]);
+      var offset = 'offset' + extent;
+      var o2 = this.target[offset] - this.sizingTarget[offset];
+      this.sizingTarget.style['max' + extent] = (ws - o - o2) + 'px';
+    },
+
+    // vertically and horizontally center if not positioned
+    repositionTarget: function() {
+      // only center if position fixed.      
+      if (this.dimensions.position.css !== 'fixed') {
+        return; 
+      }
+      if (!this.dimensions.position.v) {
+        var t = (window.innerHeight - this.target.offsetHeight) / 2;
+        t -= this.dimensions.margin.top;
         this.target.style.top = t + 'px';
       }
-      if (this._shouldPosition.left) {
-        var l = Math.max((window.innerWidth - 
-            this.target.offsetWidth - this.margin*2) / 2, this.margin);
+
+      if (!this.dimensions.position.h) {
+        var l = (window.innerWidth - this.target.offsetWidth) / 2;
+        l -= this.dimensions.margin.left;
         this.target.style.left = l + 'px';
       }
     },
 
     resetTargetDimensions: function() {
-      this.target.style.top = this.target.style.left = '';
-      this.target.style.right = this.target.style.bottom = '';
-      this.target.style.width = this.target.style.height = '';
-      this._shouldPosition = null;
+      if (!this.dimensions.size.v) {
+        this.sizingTarget.style.maxHeight = '';  
+      }
+      if (!this.dimensions.size.h) {
+        this.sizingTarget.style.maxWidth = '';  
+      }
+      this.dimensions = null;
     },
 
     tapHandler: function(e) {
@@ -4202,17 +4255,11 @@ Fired when the `core-overlay` has completely closed.
       if (!this[bound]) {
         this[bound] = function(e) {
           method.call(self, e);
-        }
+        };
       }
       return this[bound];
     },
   });
-
-  function forcePolyfillRender(target) {
-    if (window.ShadowDOMPolyfill) {
-      target.offsetHeight;
-    }
-  }
 
   // TODO(sorvell): This should be an element with private state so it can
   // be independent of overlay.
@@ -4324,7 +4371,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 :host(.core-transition) {
   outline: none;
-  overflow: hidden;
+  overflow: auto;
   opacity: 0;
   transition: transform 0.2s ease-in-out, opacity 0.2s ease-in;
   -webkit-transition: -webkit-transform 0.2s ease-in-out, opacity 0.2s ease-in;
@@ -4333,8 +4380,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 :host(.core-transition.core-opened) {
   opacity: 1;
-  transform: none;
-  -webkit-transform: none;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
 :host(.core-transition-center) {
@@ -4628,7 +4675,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 }
 </style>
 
-  <core-overlay opened="{{opened}}" target="{{}}" sizingtarget="{{$.container}}" transition="core-transition-bottom"></core-overlay>
+  <core-overlay autofocusdisabled="" opened="{{opened}}" target="{{}}" sizingtarget="{{$.container}}" transition="core-transition-bottom"></core-overlay>
 
   <div class="toast-container" horizontal="" layout="">
 
@@ -4823,33 +4870,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <polymer-element name="plato-association-maker">
   <template>
-    <style>/**
- * ©2014 Joseph B. Axenroth
- *
- * This is an ancilliary CSS file for Plato Paper custom elements, for which
- * several elements share a common thematic approach to subelements.
- */
-
-div.widget {
-  background-color: white;
-  border: 1px solid black;
-  padding: 8px;
-  width: 320px;
-
-  -moz-box-shadow:    1px 1px 3px 4px #bbb !important;
-  -webkit-box-shadow: 1px 1px 3px 4px #bbb !important;
-  box-shadow:         1px 1px 3px 4px #bbb !important;
-}
-
-span#header {
-  display: block;
-  background-color: #ddd;
-  margin-bottom: 8px;
-  padding: 8px;
-  text-align: center;
-  font-weight: bold;
-}
-</style>
+    <link rel="stylesheet" href="plato-paper-common.css">
     <style type="text/css">
       span#association-key-text {
         display: none;
@@ -4865,7 +4886,7 @@ span#header {
       <paper-input id="nodeIdInput" label="Node Identifier" floatinglabel="" value="{{nodeId}}" on-change="{{handleNodeIdChange}}">
       </paper-input><br>
 
-      <paper-button style="background-color: #537ba4; margin-left: 2px;" label="Create Association Key" icon="create" raisedbutton="" on-click="{{makeAssociationKey}}"></paper-button>
+      <paper-button style="background-color: #537ba4; margin-left: 2px;" icon="create" raised="" on-click="{{makeAssociationKey}}">Create Association Key</paper-button>
 
       <span id="association-key-text">
         <strong>The section or user to node association key is:</strong>
@@ -4886,33 +4907,7 @@ span#header {
 
 <polymer-element name="plato-authenticator" attributes="username password">
   <template>
-    <style>/**
- * ©2014 Joseph B. Axenroth
- *
- * This is an ancilliary CSS file for Plato Paper custom elements, for which
- * several elements share a common thematic approach to subelements.
- */
-
-div.widget {
-  background-color: white;
-  border: 1px solid black;
-  padding: 8px;
-  width: 320px;
-
-  -moz-box-shadow:    1px 1px 3px 4px #bbb !important;
-  -webkit-box-shadow: 1px 1px 3px 4px #bbb !important;
-  box-shadow:         1px 1px 3px 4px #bbb !important;
-}
-
-span#header {
-  display: block;
-  background-color: #ddd;
-  margin-bottom: 8px;
-  padding: 8px;
-  text-align: center;
-  font-weight: bold;
-}
-</style>
+    <link rel="stylesheet" href="plato-paper-common.css">
     <style type="text/css">
       paper-button {
         margin-left:  2px;
@@ -4926,9 +4921,9 @@ span#header {
 
       <paper-input type="password" id="password" label="PLATO Password" floatinglabel="" value="{{password}}" on-change="{{handlePasswordChange}}"></paper-input>
 
-      <paper-button style="background-color: #537ba4;" label="authenticate" icon="lock-outline" raisedbutton="" on-click="{{signalAuthentication}}"></paper-button>
+      <paper-button style="background-color: #537ba4;" icon="lock-outline" raised="" on-click="{{signalAuthentication}}">Authenticate</paper-button>
 
-      <paper-button style="background-color: #537ba4; margin-left: 0px; margin-right: 0px;" label="clear" icon="rotate-left" raisedbutton="" on-click="{{clearAuthentication}}"></paper-button>
+      <paper-button style="background-color: #537ba4; margin-left: 0px; margin-right: 0px;" icon="rotate-left" raised="" on-click="{{clearAuthentication}}">Clear</paper-button>
 
       <paper-toast id="authToast"></paper-toast>
     </div>
@@ -4944,7 +4939,7 @@ span#header {
 </polymer-element>
 
 
-<polymer-element name="core-ajax-dart" hidden="" attributes="url handleAs auto params response method headers body contentType withCredentials">
+<polymer-element name="core-ajax-dart" hidden="" attributes="url handleAs auto params response error method headers body contentType withCredentials">
   
 </polymer-element>
 
@@ -4962,33 +4957,7 @@ span#header {
 
 <polymer-element name="plato-simple-chooser">
   <template>
-    <style>/**
- * ©2014 Joseph B. Axenroth
- *
- * This is an ancilliary CSS file for Plato Paper custom elements, for which
- * several elements share a common thematic approach to subelements.
- */
-
-div.widget {
-  background-color: white;
-  border: 1px solid black;
-  padding: 8px;
-  width: 320px;
-
-  -moz-box-shadow:    1px 1px 3px 4px #bbb !important;
-  -webkit-box-shadow: 1px 1px 3px 4px #bbb !important;
-  box-shadow:         1px 1px 3px 4px #bbb !important;
-}
-
-span#header {
-  display: block;
-  background-color: #ddd;
-  margin-bottom: 8px;
-  padding: 8px;
-  text-align: center;
-  font-weight: bold;
-}
-</style>
+    <link rel="stylesheet" href="plato-paper-common.css">
     <div class="widget">
       <label for="selectId">Select a {{type}}:</label> &nbsp;
       <select id="selectId" on-change="{{signalOptionSelected}}">
@@ -5005,6 +4974,7 @@ span#header {
 <polymer-element name="plato-course-chooser">
   
 </polymer-element>
+
 
 
 
@@ -5104,6 +5074,7 @@ span#header {
 :host {
   display: block;
   overflow: auto;
+  outline: none;
 }
 
 .core-list-viewport > * {
@@ -5134,33 +5105,7 @@ span#header {
 
 <polymer-element name="plato-cross-listing">
   <template>
-    <style>/**
- * ©2014 Joseph B. Axenroth
- *
- * This is an ancilliary CSS file for Plato Paper custom elements, for which
- * several elements share a common thematic approach to subelements.
- */
-
-div.widget {
-  background-color: white;
-  border: 1px solid black;
-  padding: 8px;
-  width: 320px;
-
-  -moz-box-shadow:    1px 1px 3px 4px #bbb !important;
-  -webkit-box-shadow: 1px 1px 3px 4px #bbb !important;
-  box-shadow:         1px 1px 3px 4px #bbb !important;
-}
-
-span#header {
-  display: block;
-  background-color: #ddd;
-  margin-bottom: 8px;
-  padding: 8px;
-  text-align: center;
-  font-weight: bold;
-}
-</style>
+    <link rel="stylesheet" href="plato-paper-common.css">
     <style type="text/css">
       span.clInfoItem {
         display: block;
@@ -5250,7 +5195,7 @@ h1 {
   padding: 4px 16px 20px;
 }
 
-polymer-next-selector { content: ':host > *'; }
+polyfill-next-selector { content: ':host > *'; }
 ::content > * {
   font: inherit;
 }
@@ -5394,33 +5339,7 @@ polymer-next-selector { content: ':host > *'; }
 
 <polymer-element name="plato-previous-content">
   <template>
-    <style>/**
- * ©2014 Joseph B. Axenroth
- *
- * This is an ancilliary CSS file for Plato Paper custom elements, for which
- * several elements share a common thematic approach to subelements.
- */
-
-div.widget {
-  background-color: white;
-  border: 1px solid black;
-  padding: 8px;
-  width: 320px;
-
-  -moz-box-shadow:    1px 1px 3px 4px #bbb !important;
-  -webkit-box-shadow: 1px 1px 3px 4px #bbb !important;
-  box-shadow:         1px 1px 3px 4px #bbb !important;
-}
-
-span#header {
-  display: block;
-  background-color: #ddd;
-  margin-bottom: 8px;
-  padding: 8px;
-  text-align: center;
-  font-weight: bold;
-}
-</style>
+    <link rel="stylesheet" href="plato-paper-common.css">
     <div class="widget">
       <span id="header">Previous PLATO content</span>
     </div>
@@ -5431,7 +5350,9 @@ span#header {
 
 
 
-<style shim-shadowdom="">/*
+<polymer-element name="core-item" attributes="label icon src" horizontal="" center="" layout="">
+<template>
+  <style>/*
 Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
 The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
@@ -5440,32 +5361,33 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
 
-html /deep/ core-item {
+:host {
   display: block;
   position: relative;
   min-height: 40px;
   white-space: nowrap;
 }
 
-html /deep/ core-item.font-scalable {
+:host(.font-scalable) {
   min-height: 2.5em;
 }
 
-html /deep/ core-item.core-selected {
+:host(.core-selected) {
   font-weight: bold;
 }
 
-html /deep/ core-item::shadow core-icon {
+#icon {
   margin: 0 16px 0 4px;
 }
 
-html /deep/ core-item.font-scalable::shadow core-icon {
+:host(.font-scalable) #icon {
   margin: 0 1em 0 0.25em;
   height: 1.5em;
   width: 1.5em;
 }
 
-html /deep/ core-item::shadow ::content > a {
+polyfill-next-selector { content: ':host > a'; }
+::content > a {
   position: absolute;
   top: 0;
   right: 0;
@@ -5476,14 +5398,11 @@ html /deep/ core-item::shadow ::content > a {
   background-color: rgba(0, 0, 0, 0.000001);
 }
 </style>
-
-<polymer-element name="core-item" attributes="label icon src" horizontal="" center="" layout="">
-<template>
-
-  <core-icon src="{{src}}" icon="{{icon}}" hidden?="{{!src &amp;&amp; !icon}}"></core-icon>
+  <template if="{{icon || src}}">
+    <core-icon src="{{src}}" id="icon" icon="{{icon}}" hidden?="{{!src &amp;&amp; !icon}}"></core-icon>
+  </template>
   <div id="label">{{label}}</div>
   <content></content>
-  
 </template>
 <script>
 
@@ -5524,33 +5443,7 @@ html /deep/ core-item::shadow ::content > a {
 
 <polymer-element name="plato-previous-content-listing">
   <template>
-    <style>/**
- * ©2014 Joseph B. Axenroth
- *
- * This is an ancilliary CSS file for Plato Paper custom elements, for which
- * several elements share a common thematic approach to subelements.
- */
-
-div.widget {
-  background-color: white;
-  border: 1px solid black;
-  padding: 8px;
-  width: 320px;
-
-  -moz-box-shadow:    1px 1px 3px 4px #bbb !important;
-  -webkit-box-shadow: 1px 1px 3px 4px #bbb !important;
-  box-shadow:         1px 1px 3px 4px #bbb !important;
-}
-
-span#header {
-  display: block;
-  background-color: #ddd;
-  margin-bottom: 8px;
-  padding: 8px;
-  text-align: center;
-  font-weight: bold;
-}
-</style>
+    <link rel="stylesheet" href="plato-paper-common.css">
     <div class="widget">
       <span id="header">Previous PLATO content list</span>
       <div>
@@ -5705,7 +5598,7 @@ core-icon {
 
 
 
-<polymer-element name="core-selector" attributes="selected multi valueattr selectedClass selectedProperty selectedAttribute selectedItem selectedModel selectedIndex notap target itemsSelector activateEvent">
+<polymer-element name="core-selector" attributes="selected multi valueattr selectedClass selectedProperty selectedAttribute selectedItem selectedModel selectedIndex notap excludedLocalNames target itemsSelector activateEvent">
 
   <template>
     <core-selection id="selection" multi="{{multi}}" on-core-select="{{selectionSelect}}"></core-selection>
@@ -5799,6 +5692,8 @@ core-icon {
       /**
        * Returns the currently selected element. In multi-selection this returns
        * an array of selected elements.
+       * Note that you should not use this to set the selection. Instead use
+       * `selected`.
        * 
        * @attribute selectedItem
        * @type Object
@@ -5809,6 +5704,8 @@ core-icon {
       /**
        * In single selection, this returns the model associated with the
        * selected element.
+       * Note that you should not use this to set the selection. Instead use 
+       * `selected`.
        * 
        * @attribute selectedModel
        * @type Object
@@ -5818,12 +5715,34 @@ core-icon {
 
       /**
        * In single selection, this returns the selected index.
+       * Note that you should not use this to set the selection. Instead use
+       * `selected`.
        *
        * @attribute selectedIndex
        * @type number
        * @default -1
        */
       selectedIndex: -1,
+
+      /**
+       * Nodes with local name that are in the list will not be included 
+       * in the selection items.  In the following example, `items` returns four
+       * `core-item`'s and doesn't include `h3` and `hr`.
+       *
+       *     <core-selector excludedLocalNames="h3 hr">
+       *       <h3>Header</h3>
+       *       <core-item>Item1</core-item>
+       *       <core-item>Item2</core-item>
+       *       <hr>
+       *       <core-item>Item3</core-item>
+       *       <core-item>Item4</core-item>
+       *     </core-selector>
+       *
+       * @attribute excludedLocalNames
+       * @type string
+       * @default ''
+       */
+      excludedLocalNames: '',
 
       /**
        * The target element that contains items.  If this is not set 
@@ -5837,7 +5756,8 @@ core-icon {
 
       /**
        * This can be used to query nodes from the target node to be used for 
-       * selection items.  Note this only works if the 'target' property is set.
+       * selection items.  Note this only works if `target` is set
+       * and is not `core-selector` itself.
        *
        * Example:
        *
@@ -5875,8 +5795,12 @@ core-icon {
        */
       notap: false,
 
+      defaultExcludedLocalNames: 'template',
+
       ready: function() {
         this.activateListener = this.activateHandler.bind(this);
+        this.itemFilter = this.filterItem.bind(this);
+        this.excludedLocalNamesChanged();
         this.observer = new MutationObserver(this.updateSelected.bind(this));
         if (!this.target) {
           this.target = this;
@@ -5895,9 +5819,22 @@ core-icon {
         var nodes = this.target !== this ? (this.itemsSelector ? 
             this.target.querySelectorAll(this.itemsSelector) : 
                 this.target.children) : this.$.items.getDistributedNodes();
-        return Array.prototype.filter.call(nodes || [], function(n) {
-          return n && n.localName !== 'template';
-        });
+        return Array.prototype.filter.call(nodes, this.itemFilter);
+      },
+
+      filterItem: function(node) {
+        return !this._excludedNames[node.localName];
+      },
+
+      excludedLocalNamesChanged: function() {
+        this._excludedNames = {};
+        var s = this.defaultExcludedLocalNames;
+        if (this.excludedLocalNames) {
+          s += ' ' + this.excludedLocalNames;
+        }
+        s.split(/\s+/g).forEach(function(n) {
+          this._excludedNames[n] = 1;
+        }, this);
       },
 
       targetChanged: function(old) {
@@ -6073,6 +6010,7 @@ core-icon {
         var item = this.items[index];
         if (item) {
           this.selected = this.valueForNode(item) || index;
+          return item;
         }
       },
       
@@ -6080,18 +6018,24 @@ core-icon {
        * Selects the previous item.  This should be used in single selection only.
        *
        * @method selectPrevious
+       * @param {boolean} wrap if true and it is already at the first item, wrap to the end
+       * @returns the previous item or undefined if there is none
        */
-      selectPrevious: function() {
-        this.selectIndex(this.selectedIndex - 1);
+      selectPrevious: function(wrap) {
+        var i = wrap && !this.selectedIndex ? this.items.length - 1 : this.selectedIndex - 1;
+        return this.selectIndex(i);
       },
       
       /**
        * Selects the next item.  This should be used in single selection only.
        *
        * @method selectNext
+       * @param {boolean} wrap if true and it is already at the last item, wrap to the front
+       * @returns the next item or undefined if there is none
        */
-      selectNext: function() {
-        this.selectIndex(this.selectedIndex + 1);
+      selectNext: function(wrap) {
+        var i = wrap && this.selectedIndex >= this.items.length - 1 ? 0 : this.selectedIndex + 1;
+        return this.selectIndex(i);
       }
       
     });
@@ -6099,7 +6043,10 @@ core-icon {
 </polymer-element>
 
 
-<style shim-shadowdom="">/*
+<polymer-element name="core-menu" extends="core-selector" noscript="">
+<template>
+
+  <style>/*
 Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
 The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
@@ -6108,18 +6055,21 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
 
-html /deep/ core-menu {
+:host {
   display: block;
   margin: 12px;
 }
 
-polyfill-next-selector { content: 'core-menu > core-item'; }
-html /deep/ core-menu::shadow ::content > core-item {
+polyfill-next-selector { content: ':host > core-item'; }
+::content > core-item {
   cursor: default;
 }
 </style>
-
-<polymer-element name="core-menu" extends="core-selector" noscript=""></polymer-element>
+  
+  <shadow></shadow>
+  
+</template>
+</polymer-element>
 
 
 
@@ -6177,19 +6127,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 }
 
 /* narrow layout */
-:host(.narrow) {
+:host(.core-narrow),
+:host-context(.core-narrow) {
   height: 56px;
 }
 
-:host(.narrow.medium-tall) {
+polyfill-next-selector { content: ':host.core-narrow.medium-tall, .core-narrow :host.medium-tall'; }
+:host(.core-narrow.medium-tall),
+:host-context(.core-narrow):host(.medium-tall) {
   height: 112px;
 }
 
-:host(.narrow.tall) {
+polyfill-next-selector { content: ':host.core-narrow.tall, .core-narrow :host.tall'; }
+:host(.core-narrow.tall),
+:host-context(.core-narrow):host(.tall) {
   height: 168px;
 }
 
-:host(.narrow) .toolbar-tools {
+polyfill-next-selector { content: ':host.core-narrow .toolbar-tools, .core-narrow :host .toolbar-tools'; }
+:host(.core-narrow) .toolbar-tools,
+:host-context(.core-narrow) .toolbar-tools {
   height: 56px;
   padding: 0;
 }
@@ -6224,7 +6181,7 @@ polyfill-next-selector { content: '.toolbar-tools > *'; }
 /* elements spacing */
 polyfill-next-selector { content: '.toolbar-tools > *'; }
 ::content > * {
-  margin: 0px 8px;
+  margin: 0 8px;
 }
 
 /* misc helpers */
@@ -6265,33 +6222,7 @@ polyfill-next-selector { content: ':host .indent'; }
 
 <polymer-element name="plato-section-info">
   <template>
-    <style>/**
- * ©2014 Joseph B. Axenroth
- *
- * This is an ancilliary CSS file for Plato Paper custom elements, for which
- * several elements share a common thematic approach to subelements.
- */
-
-div.widget {
-  background-color: white;
-  border: 1px solid black;
-  padding: 8px;
-  width: 320px;
-
-  -moz-box-shadow:    1px 1px 3px 4px #bbb !important;
-  -webkit-box-shadow: 1px 1px 3px 4px #bbb !important;
-  box-shadow:         1px 1px 3px 4px #bbb !important;
-}
-
-span#header {
-  display: block;
-  background-color: #ddd;
-  margin-bottom: 8px;
-  padding: 8px;
-  text-align: center;
-  font-weight: bold;
-}
-</style>
+    <link rel="stylesheet" href="plato-paper-common.css">
     <style type="text/css">
       div#container {
         padding: 0px;
@@ -6365,6 +6296,267 @@ span#header {
 
 
 
+
+
+<style shim-shadowdom="">
+  html /deep/ core-a11y-keys {
+    display: none;
+  }
+</style>
+
+<polymer-element name="core-a11y-keys">
+<script>
+  (function() {
+    /*
+     * Chrome uses an older version of DOM Level 3 Keyboard Events
+     *
+     * Most keys are labeled as text, but some are Unicode codepoints.
+     * Values taken from: http://www.w3.org/TR/2007/WD-DOM-Level-3-Events-20071221/keyset.html#KeySet-Set
+     */
+    var KEY_IDENTIFIER = {
+      'U+0009': 'tab',
+      'U+001B': 'esc',
+      'U+0020': 'space',
+      'U+002A': '*',
+      'U+0030': '0',
+      'U+0031': '1',
+      'U+0032': '2',
+      'U+0033': '3',
+      'U+0034': '4',
+      'U+0035': '5',
+      'U+0036': '6',
+      'U+0037': '7',
+      'U+0038': '8',
+      'U+0039': '9',
+      'U+0041': 'a',
+      'U+0042': 'b',
+      'U+0043': 'c',
+      'U+0044': 'd',
+      'U+0045': 'e',
+      'U+0046': 'f',
+      'U+0047': 'g',
+      'U+0048': 'h',
+      'U+0049': 'i',
+      'U+004A': 'j',
+      'U+004B': 'k',
+      'U+004C': 'l',
+      'U+004D': 'm',
+      'U+004E': 'n',
+      'U+004F': 'o',
+      'U+0050': 'p',
+      'U+0051': 'q',
+      'U+0052': 'r',
+      'U+0053': 's',
+      'U+0054': 't',
+      'U+0055': 'u',
+      'U+0056': 'v',
+      'U+0057': 'w',
+      'U+0058': 'x',
+      'U+0059': 'y',
+      'U+005A': 'z',
+      'U+007F': 'del'
+    };
+
+    /*
+     * Special table for KeyboardEvent.keyCode.
+     * KeyboardEvent.keyIdentifier is better, and KeyBoardEvent.key is even better than that
+     *
+     * Values from: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent.keyCode#Value_of_keyCode
+     */
+    var KEY_CODE = {
+      13: 'enter',
+      27: 'esc',
+      33: 'pageup',
+      34: 'pagedown',
+      35: 'end',
+      36: 'home',
+      32: 'space',
+      37: 'left',
+      38: 'up',
+      39: 'right',
+      40: 'down',
+      46: 'del',
+      106: '*'
+    };
+
+    /*
+     * KeyboardEvent.key is mostly represented by printable character made by the keyboard, with unprintable keys labeled
+     * nicely.
+     *
+     * However, on OS X, Alt+char can make a Unicode character that follows an Apple-specific mapping. In this case, we
+     * fall back to .keyCode.
+     */
+    var KEY_CHAR = /[a-z0-9*]/;
+
+    function transformKey(key) {
+      var validKey = '';
+      if (key) {
+        var lKey = key.toLowerCase();
+        if (lKey.length == 1) {
+          if (KEY_CHAR.test(lKey)) {
+            validKey = lKey;
+          }
+        } else if (lKey == 'multiply') {
+          // numpad '*' can map to Multiply on IE/Windows
+          validKey = '*';
+        } else {
+          validKey = lKey;
+        }
+      }
+      return validKey;
+    }
+
+    var IDENT_CHAR = /U\+/;
+    function transformKeyIdentifier(keyIdent) {
+      var validKey = '';
+      if (keyIdent) {
+        if (IDENT_CHAR.test(keyIdent)) {
+          validKey = KEY_IDENTIFIER[keyIdent];
+        } else {
+          validKey = keyIdent.toLowerCase();
+        }
+      }
+      return validKey;
+    }
+
+    function transformKeyCode(keyCode) {
+      var validKey = '';
+      if (Number(keyCode)) {
+        if (keyCode >= 65 && keyCode <= 90) {
+          // ascii a-z
+          // lowercase is 32 offset from uppercase
+          validKey = String.fromCharCode(32 + keyCode);
+        } else if (keyCode >= 112 && keyCode <= 123) {
+          // function keys f1-f12
+          validKey = 'f' + (keyCode - 112);
+        } else if (keyCode >= 48 && keyCode <= 57) {
+          // top 0-9 keys
+          validKey = String(48 - keyCode);
+        } else if (keyCode >= 96 && keyCode <= 105) {
+          // num pad 0-9
+          validKey = String(96 - keyCode);
+        } else {
+          validKey = KEY_CODE[keyCode];
+        }
+      }
+      return validKey;
+    }
+
+    function keyboardEventToKey(ev) {
+      // fall back from .key, to .keyIdentifier, and then to .keyCode
+      var normalizedKey = transformKey(ev.key) || transformKeyIdentifier(ev.keyIdentifier) || transformKeyCode(ev.keyCode) || '';
+      return {
+        shift: ev.shiftKey,
+        ctrl: ev.ctrlKey,
+        meta: ev.metaKey,
+        alt: ev.altKey,
+        key: normalizedKey
+      };
+    }
+
+    /*
+     * Input: ctrl+shift+f7 => {ctrl: true, shift: true, key: 'f7'}
+     * ctrl/space => {ctrl: true} || {key: space}
+     */
+    function stringToKey(keyCombo) {
+      var keys = keyCombo.split('+');
+      var keyObj = Object.create(null);
+      keys.forEach(function(key) {
+        if (key == 'shift') {
+          keyObj.shift = true;
+        } else if (key == 'ctrl') {
+          keyObj.ctrl = true;
+        } else if (key == 'alt') {
+          keyObj.alt = true;
+        } else {
+          keyObj.key = key;
+        }
+      });
+      return keyObj;
+    }
+
+    function keyMatches(a, b) {
+      return Boolean(a.alt) == Boolean(b.alt) && Boolean(a.ctrl) == Boolean(b.ctrl) && Boolean(a.shift) == Boolean(b.shift) && a.key === b.key;
+    }
+
+    /**
+     * Fired when a keycombo in `keys` is pressed.
+     *
+     * @event keys-pressed
+     */
+    function processKeys(ev) {
+      var current = keyboardEventToKey(ev);
+      for (var i = 0, dk; i < this._desiredKeys.length; i++) {
+        dk = this._desiredKeys[i];
+        if (keyMatches(dk, current)) {
+          ev.preventDefault();
+          ev.stopPropagation();
+          this.fire('keys-pressed', current, this, false);
+          break;
+        }
+      }
+    }
+
+    function listen(node, handler) {
+      if (node && node.addEventListener) {
+        node.addEventListener('keydown', handler);
+      }
+    }
+
+    function unlisten(node, handler) {
+      if (node && node.removeEventListener) {
+        node.removeEventListener('keydown', handler);
+      }
+    }
+
+    Polymer('core-a11y-keys', {
+      created: function() {
+        this._keyHandler = processKeys.bind(this);
+      },
+      attached: function() {
+        listen(this.target, this._keyHandler);
+      },
+      detached: function() {
+        unlisten(this.target, this._keyHandler);
+      },
+      publish: {
+        /**
+         * The set of key combinations to listen for.
+         *
+         * @attribute keys
+         * @type string (keys syntax)
+         * @default ''
+         */
+        keys: '',
+        /**
+         * The node that will fire keyboard events.
+         *
+         * @attribute target
+         * @type Node
+         * @default null
+         */
+        target: null
+      },
+      keysChanged: function() {
+        // * can have multiple mappings: shift+8, * on numpad or Multiply on numpad
+        var normalized = this.keys.replace('*', '* shift+*');
+        this._desiredKeys = normalized.toLowerCase().split(' ').map(stringToKey);
+      },
+      targetChanged: function(oldTarget) {
+        unlisten(oldTarget, this._keyHandler);
+        listen(this.target, this._keyHandler);
+      }
+    });
+  })();
+</script>
+</polymer-element>
+
+
+
+<script>
+// This empty script is here to workaround issue
+// https://github.com/dart-lang/core-elements/issues/11
+</script>
 
 <polymer-element name="paper-radio-button" role="radio" tabindex="0" aria-checked="false">
 <template>
@@ -6474,6 +6666,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   background-color: #5a5a5a;
 }
 </style>
+
+  <core-a11y-keys target="{{}}" keys="space" on-keys-pressed="{{tap}}"></core-a11y-keys>
   
   <div id="radioContainer" class="{{ {labeled: label} | tokenList }}">
   
@@ -6900,35 +7094,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 
+
 <polymer-element name="plato-sections-chooser">
   <template>
-    <style>/**
- * ©2014 Joseph B. Axenroth
- *
- * This is an ancilliary CSS file for Plato Paper custom elements, for which
- * several elements share a common thematic approach to subelements.
- */
-
-div.widget {
-  background-color: white;
-  border: 1px solid black;
-  padding: 8px;
-  width: 320px;
-
-  -moz-box-shadow:    1px 1px 3px 4px #bbb !important;
-  -webkit-box-shadow: 1px 1px 3px 4px #bbb !important;
-  box-shadow:         1px 1px 3px 4px #bbb !important;
-}
-
-span#header {
-  display: block;
-  background-color: #ddd;
-  margin-bottom: 8px;
-  padding: 8px;
-  text-align: center;
-  font-weight: bold;
-}
-</style>
+    <link rel="stylesheet" href="plato-paper-common.css">
     <style type="text/css">
       div#sections-chooser-widget {
         width:  480px;
@@ -6990,33 +7159,7 @@ span#header {
 
 <polymer-element name="plato-user-information">
   <template>
-    <style>/**
- * ©2014 Joseph B. Axenroth
- *
- * This is an ancilliary CSS file for Plato Paper custom elements, for which
- * several elements share a common thematic approach to subelements.
- */
-
-div.widget {
-  background-color: white;
-  border: 1px solid black;
-  padding: 8px;
-  width: 320px;
-
-  -moz-box-shadow:    1px 1px 3px 4px #bbb !important;
-  -webkit-box-shadow: 1px 1px 3px 4px #bbb !important;
-  box-shadow:         1px 1px 3px 4px #bbb !important;
-}
-
-span#header {
-  display: block;
-  background-color: #ddd;
-  margin-bottom: 8px;
-  padding: 8px;
-  text-align: center;
-  font-weight: bold;
-}
-</style>
+    <link rel="stylesheet" href="plato-paper-common.css">
     <div class="widget">
       <span id="header">PLATO User Information</span>
 
@@ -7782,7 +7925,7 @@ Note that the container element of the page does not participate in the transiti
 Dynamically setting up transitions
 ----------------------------------
 
-An easy way to dynamically set up transitions dynamically is to use property binding on
+An easy way to set up transitions dynamically is to use property binding on
 the transition attributes. 
 
 Example:
@@ -7824,7 +7967,7 @@ Example:
 
     <core-animated-pages>
       <section id="page1"></section>
-      <nested-page id="page2"></section>
+      <nested-page id="page2"></nested-page>
     </core-animated-pages>
 
 @element core-animated-pages
@@ -8084,33 +8227,7 @@ polyfill-next-selector { content: ':host > *:not(.core-selected):not([animate])'
 
 <polymer-element name="plato-authentication-module" attributes="url">
   <template>
-    <style>/**
- * ©2014 Joseph B. Axenroth
- *
- * This is an ancilliary CSS file for Plato Paper custom elements, for which
- * several elements share a common thematic approach to subelements.
- */
-
-div.widget {
-  background-color: white;
-  border: 1px solid black;
-  padding: 8px;
-  width: 320px;
-
-  -moz-box-shadow:    1px 1px 3px 4px #bbb !important;
-  -webkit-box-shadow: 1px 1px 3px 4px #bbb !important;
-  box-shadow:         1px 1px 3px 4px #bbb !important;
-}
-
-span#header {
-  display: block;
-  background-color: #ddd;
-  margin-bottom: 8px;
-  padding: 8px;
-  text-align: center;
-  font-weight: bold;
-}
-</style>
+    <link rel="stylesheet" href="plato-paper-common.css">
     <style type="text/css">
       div#plato-auth-module {
         background-color: #eee;
@@ -8130,6 +8247,18 @@ span#header {
     </div>
     <plato-communicator id="plato-auth-comm" url="{{url}}" successsignal="plato-auth-success" errorsignal="plato-auth-error">
     </plato-communicator>
+  </template>
+  
+</polymer-element>
+
+
+
+
+
+<polymer-element name="plato-departments-module">
+  <template>
+    <plato-department-chooser id="department-chooser"></plato-department-chooser>
+    <plato-communicator id="departments-communicator" url="/dart/retrieve/departments" successsignal="departments-loaded" errorsignal="departments-failed"></plato-communicator>
   </template>
   
 </polymer-element>
@@ -8158,9 +8287,7 @@ div {
     <p>Plato Paper elements prototyping (for future Plato-based web applications).</p>
 
     <plato-association-maker></plato-association-maker><br>
-
-    <plato-authentication-module url="http://dev.local/dart/auth/learn">
-    </plato-authentication-module><br>
+    <plato-departments-module></plato-departments-module>
   
 
 <script src="index.html_bootstrap.dart.js" async=""></script></body></html>
