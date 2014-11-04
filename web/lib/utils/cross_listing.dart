@@ -70,7 +70,7 @@ class CrossListing {
     return false;
   }
 
-  /// The [toJson] method outputs a JSON-based [Object] representation of the
+  /// The [toJson] method outputs a JSON-like [Object] representation of the
   /// course sections contained within the cross-listing set some instance of
   /// this class is reflective of.
   Object toJson() {

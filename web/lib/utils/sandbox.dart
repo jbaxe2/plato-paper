@@ -10,9 +10,7 @@ class Sandbox extends Requestable {
   }
 
   /// The [toJson] method...
-  String toJson() {
-    Map sandboxJson = new Map();
-
-    return JSON.encode (sandboxJson);
+  Object toJson() {
+    return {};
   }
 }

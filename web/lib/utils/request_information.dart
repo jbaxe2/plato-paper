@@ -208,7 +208,7 @@ class RequestInformation {
     _vistaSectionImports.remove (aVistaSectionImport);
   }
 
-  /// The [toJson] method outputs a JSON-based [String] representation of the
+  /// The [toJson] method outputs a JSON-like [String] representation of the
   /// request information reflected by this class.
   Object toJson() {
     return {
