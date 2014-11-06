@@ -1,7 +1,16 @@
 <link rel="import" href="packages/polymer/polymer.html">
 
+<link rel="import" href="plato-communicator.html">
 <link rel="import" href="plato-simple-chooser.html">
 
-<polymer-element name="plato-term-chooser" extends="plato-simple-chooser">
+<polymer-element name="plato-term-chooser">
+  <template>
+    <plato-simple-chooser id="simple-chooser"></plato-simple-chooser>
+    <plato-communicator
+      id="terms-communicator"
+      url="/dart/retrieve/terms"
+      successSignal="terms-loaded"
+      errorSignal="terms-failed"></plato-communicator>
+  </template>
   <script type="application/dart" src="plato-term-chooser.dart"></script>
 </polymer-element>

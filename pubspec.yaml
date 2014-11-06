@@ -10,4 +10,4 @@ transformers:
 - polymer:
     entry_points: web/index.html
     inline_stylesheets:
-      web/plato-paper-common.css: false
+      web/style/plato-paper-common.css: false

@@ -4870,7 +4870,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <polymer-element name="plato-association-maker">
   <template>
-    <link rel="stylesheet" href="plato-paper-common.css">
+    <link rel="stylesheet" href="style/plato-paper-common.css">
     <style type="text/css">
       span#association-key-text {
         display: none;
@@ -4907,7 +4907,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <polymer-element name="plato-authenticator" attributes="username password">
   <template>
-    <link rel="stylesheet" href="plato-paper-common.css">
+    <link rel="stylesheet" href="style/plato-paper-common.css">
     <style type="text/css">
       paper-button {
         margin-left:  2px;
@@ -4955,12 +4955,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 
+
 <polymer-element name="plato-simple-chooser">
   <template>
-    <link rel="stylesheet" href="plato-paper-common.css">
+    <link rel="stylesheet" href="style/plato-paper-common.css">
     <div class="widget">
       <label for="selectId">Select a {{type}}:</label> &nbsp;
-      <select id="selectId" on-change="{{signalOptionSelected}}">
+      <select id="selectId" on-change="{{triggerOptionSelected}}">
         <option template="" repeat="{{optionKey in options.keys}}" value="{{optionKey}}">
           {{options[optionKey]}}
         </option>
@@ -4971,7 +4972,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 </polymer-element>
 
 
-<polymer-element name="plato-course-chooser">
+<polymer-element name="plato-course-chooser" attributes="term department">
+  <template>
+    <plato-simple-chooser id="simple-chooser"></plato-simple-chooser>
+    <plato-communicator id="courses-communicator" url="/dart/retrieve/courses" successsignal="courses-loaded" errorsignal="courses-failed"></plato-communicator>
+  </template>
   
 </polymer-element>
 
@@ -5105,7 +5110,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <polymer-element name="plato-cross-listing">
   <template>
-    <link rel="stylesheet" href="plato-paper-common.css">
+    <link rel="stylesheet" href="style/plato-paper-common.css">
     <style type="text/css">
       span.clInfoItem {
         display: block;
@@ -5132,7 +5137,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 </polymer-element>
 
 
+
+
+
 <polymer-element name="plato-department-chooser">
+  <template>
+    <plato-simple-chooser id="simple-chooser"></plato-simple-chooser>
+    <plato-communicator id="departments-communicator" url="/dart/retrieve/departments" successsignal="departments-loaded" errorsignal="departments-failed"></plato-communicator>
+  </template>
   
 </polymer-element>
 
@@ -5332,14 +5344,21 @@ polyfill-next-selector { content: ':host > *'; }
 </polymer-element>
 
 
+
+
+
 <polymer-element name="plato-faculty-chooser">
+  <template>
+    <plato-simple-chooser id="simple-chooser"></plato-simple-chooser>
+    <plato-communicator id="faculty-communicator" url="/dart/retrieve/faculty" successsignal="faculty-loaded" errorsignal="faculty-failed"></plato-communicator>
+  </template>
   
 </polymer-element>
 
 
 <polymer-element name="plato-previous-content">
   <template>
-    <link rel="stylesheet" href="plato-paper-common.css">
+    <link rel="stylesheet" href="style/plato-paper-common.css">
     <div class="widget">
       <span id="header">Previous PLATO content</span>
     </div>
@@ -5443,7 +5462,7 @@ polyfill-next-selector { content: ':host > a'; }
 
 <polymer-element name="plato-previous-content-listing">
   <template>
-    <link rel="stylesheet" href="plato-paper-common.css">
+    <link rel="stylesheet" href="style/plato-paper-common.css">
     <div class="widget">
       <span id="header">Previous PLATO content list</span>
       <div>
@@ -6222,7 +6241,7 @@ polyfill-next-selector { content: ':host .indent'; }
 
 <polymer-element name="plato-section-info">
   <template>
-    <link rel="stylesheet" href="plato-paper-common.css">
+    <link rel="stylesheet" href="style/plato-paper-common.css">
     <style type="text/css">
       div#container {
         padding: 0px;
@@ -7097,7 +7116,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <polymer-element name="plato-sections-chooser">
   <template>
-    <link rel="stylesheet" href="plato-paper-common.css">
+    <link rel="stylesheet" href="style/plato-paper-common.css">
     <style type="text/css">
       div#sections-chooser-widget {
         width:  480px;
@@ -7152,14 +7171,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 
-<polymer-element name="plato-term-chooser" extends="plato-simple-chooser">
+
+<polymer-element name="plato-term-chooser">
+  <template>
+    <plato-simple-chooser id="simple-chooser"></plato-simple-chooser>
+    <plato-communicator id="terms-communicator" url="/dart/retrieve/terms" successsignal="terms-loaded" errorsignal="terms-failed"></plato-communicator>
+  </template>
   
 </polymer-element>
 
 
 <polymer-element name="plato-user-information">
   <template>
-    <link rel="stylesheet" href="plato-paper-common.css">
+    <link rel="stylesheet" href="style/plato-paper-common.css">
     <div class="widget">
       <span id="header">PLATO User Information</span>
 
@@ -8227,7 +8251,7 @@ polyfill-next-selector { content: ':host > *:not(.core-selected):not([animate])'
 
 <polymer-element name="plato-authentication-module" attributes="url">
   <template>
-    <link rel="stylesheet" href="plato-paper-common.css">
+    <link rel="stylesheet" href="style/plato-paper-common.css">
     <style type="text/css">
       div#plato-auth-module {
         background-color: #eee;
@@ -8255,10 +8279,15 @@ polyfill-next-selector { content: ':host > *:not(.core-selected):not([animate])'
 
 
 
-<polymer-element name="plato-departments-module">
+
+
+
+<polymer-element name="plato-sections-chooser-module">
   <template>
     <plato-department-chooser id="department-chooser"></plato-department-chooser>
-    <plato-communicator id="departments-communicator" url="/dart/retrieve/departments" successsignal="departments-loaded" errorsignal="departments-failed"></plato-communicator>
+    <plato-term-chooser id="term-chooser"></plato-term-chooser>
+    <plato-course-chooser id="course-chooser" term="{{term}}" department="{{department}}"></plato-course-chooser>
+    <plato-sections-chooser id="sections-chooser"></plato-sections-chooser>
   </template>
   
 </polymer-element>
@@ -8287,7 +8316,8 @@ div {
     <p>Plato Paper elements prototyping (for future Plato-based web applications).</p>
 
     <plato-association-maker></plato-association-maker><br>
-    <plato-departments-module></plato-departments-module>
+
+    <plato-sections-chooser-module></plato-sections-chooser-module>
   
 
 <script src="index.html_bootstrap.dart.js" async=""></script></body></html>

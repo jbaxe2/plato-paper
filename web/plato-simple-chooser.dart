@@ -20,38 +20,43 @@ class PlatoSimpleChooser extends PolymerElement {
   /// A [String] to name the signal that should be triggered once an option has
   /// been selected; this should be provided via subclasses or explicitly
   /// through a setter.
-  String signal;
+  String _signal;
 
-  /// The [PlatoSimpleChooser]'s [created] method initializes the options model
+  /// The signal getter/setter.
+  String get signal => _signal;
+         set signal (String theSignal) => _signal = theSignal;
+
+  /// The [PlatoSimpleChooser.created] method initializes the options model
   /// that will be used for this element's select element's options children.
   PlatoSimpleChooser.created() : super.created() {
-    options = new Map<String, String>();
+    options = toObservable (new Map<String, String>());
   }
 
-  /// The [addOptions] method is used to add a [Map] of [String] key/value pairs,
-  /// whereby the keys represent the ID's of some option and the values represent the
-  /// corresponding descriptions.
-  void addOptions (Map<String, String> someTerms) {
-    options.addAll (someTerms);
+  /// The [addOption] method is used to add a [Map] of [String] key/value
+  /// pairs, whereby the keys represent the ID's of some option and the values
+  /// represent the corresponding descriptions.
+  void addOption (Map<String, String> someOption) {
+    options.addAll (someOption);
   }
 
-  /// The [triggerOptionSelected] method is invoked automatically once a user has
-  /// selected a term, firing the event specified by a subclass's signal field.
+  /// The [triggerOptionSelected] method is invoked automatically once a user
+  /// has selected a term, firing the event specified by a subclass's signal
+  /// field.
   void triggerOptionSelected (Event event, var details, Element target) {
-    if (null == signal) {
+    if (null == _signal) {
       throw new PlatoPaperEventException (
         'Cannot trigger an event signal that has not been specified.'
       );
     }
 
-    SelectElement optionsSelect = $['selectId'];
+    SelectElement optionsSelect = $['selectId'] as SelectElement;
 
     String selectedOptionsKey = options.keys.elementAt (optionsSelect.selectedIndex);
     String selectedOptionsValue = options.values.elementAt (optionsSelect.selectedIndex);
 
     if (0 < optionsSelect.selectedIndex) {
       this.fire (
-        signal,
+        _signal,
         detail: {'key': selectedOptionsKey, 'value': selectedOptionsValue}
       );
     }

@@ -1,26 +1,57 @@
 library plato.paper.chooser.faculty;
 
+import 'dart:html';
+
 import 'package:polymer/polymer.dart';
 
+import 'plato-communicator.dart';
 import 'plato-simple-chooser.dart';
 
 /// A Polymer-based element, using paper elements, to display faculty members.
 @CustomTag('plato-faculty-chooser')
-class PlatoFacultyChooser extends PlatoSimpleChooser {
-  /// The [PlatoTermChooser]'s [created] method sets the simple chooser's type
-  /// to 'faculty', the signal to 'faculty-selected', and establishes an empty
-  /// state for the select element.
-  PlatoFacultyChooser.created() : super.created() {
-    type = 'faculty';
-    signal = 'faculty-selected';
+class PlatoFacultyChooser extends PolymerElement {
+  /// The [PlatoSimpleChooser] that will be used for choosing faculty.
+  PlatoSimpleChooser _simpleChooser;
 
-    options['no-faculty'] = 'Select a faculty member...';
+  /// The [PlatoCommunicator] used to retrieve the faculty from the server.
+  PlatoCommunicator _communicator;
+
+  /// The [PlatoFacultyChooser.created] method...
+  PlatoFacultyChooser.created() : super.created();
+
+  /// The [ready] method...
+  void ready() {
+    _simpleChooser = $['simple-chooser'] as PlatoSimpleChooser
+      ..type = 'faculty'
+      ..signal = 'faculty-selected'
+      ..options['no-faculty'] = 'Select a faculty member...';
+
+    _communicator = $['faculty-communicator'] as PlatoCommunicator;
+
+    this.on['faculty-loaded'].listen (facultyLoaded);
+    this.on['faculty-failed'].listen (facultyFailed);
+    this.on['faculty-selected'].listen (facultySelected);
   }
 
-  /// The [addFaculty] method is used to add a [Map] of [String] key/value pairs,
-  /// whereby the keys represent the faculty ID's (A#) and the values represent
-  /// the full names of the faculty members.
+  /// The [addFaculty] method is used to add a [Map] of [String] key/value pair,
+  /// whereby the key represents the faculty ID (A#) and the value represents
+  /// the full name of the faculty member.
   void addFaculty (Map<String, String> someFaculty) {
-    options.addAll (someFaculty);
+    _simpleChooser.options.addAll (someFaculty);
+  }
+
+  /// The [facultyLoaded] method...
+  void facultyLoaded (CustomEvent event) {
+    ;
+  }
+
+  /// The [facultyFailed] method...
+  void facultyFailed (CustomEvent event) {
+    _simpleChooser.options['no-faculty'] = 'Error loading faculty members.';
+  }
+
+  /// The [facultySelected] method...
+  void facultySelected (CustomEvent event) {
+    ;
   }
 }

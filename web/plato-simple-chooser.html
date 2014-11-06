@@ -2,10 +2,10 @@
 
 <polymer-element name="plato-simple-chooser">
   <template>
-    <link rel="stylesheet" href="plato-paper-common.css">
+    <link rel="stylesheet" href="style/plato-paper-common.css">
     <div class="widget">
       <label for="selectId">Select a {{type}}:</label> &nbsp;
-      <select id="selectId" on-change="{{signalOptionSelected}}">
+      <select id="selectId" on-change="{{triggerOptionSelected}}">
         <option template repeat="{{optionKey in options.keys}}" value="{{optionKey}}">
           {{options[optionKey]}}
         </option>

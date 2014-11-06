@@ -1,5 +1,16 @@
 <link rel="import" href="packages/polymer/polymer.html">
 
+<link rel="import" href="plato-communicator.html">
+<link rel="import" href="plato-simple-chooser.html">
+
 <polymer-element name="plato-faculty-chooser">
+  <template>
+    <plato-simple-chooser id="simple-chooser"></plato-simple-chooser>
+    <plato-communicator
+      id="faculty-communicator"
+      url="/dart/retrieve/faculty"
+      successSignal="faculty-loaded"
+      errorSignal="faculty-failed"></plato-communicator>
+  </template>
   <script type="application/dart" src="plato-faculty-chooser.dart"></script>
 </polymer-element>
