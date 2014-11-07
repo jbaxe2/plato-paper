@@ -123,6 +123,7 @@ class PlatoCommunicator extends PolymerElement {
           body = jsonParams;
         } else {
           params = jsonParams;
+          platoAjax.params = params;
         }
       } catch (e) {
         throw new CommunicationsException (

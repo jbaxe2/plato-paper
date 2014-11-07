@@ -12,17 +12,25 @@ import 'plato-term-chooser.dart';
 /// A Polymer-based element, using paper elements, to display departments.
 @CustomTag('plato-sections-chooser-module')
 class PlatoSectionsChooserModule extends PolymerElement {
+  ///
   @observable String term;
+
+  ///
   @observable String department;
 
+  /// The 'plato-department-chooser' element for choosing the department.
   PlatoDepartmentChooser _departments;
 
+  /// The 'plato-term-chooser' element for choosing the term.
   PlatoTermChooser _terms;
 
+  /// The 'plato-course-chooser' element for choosing the course.
   PlatoCourseChooser _courses;
 
+  /// The 'plato-sections-chooser' element for choosing sections.
   PlatoSectionsChooser _sections;
 
+  /// The [PlatoSectionsChooserModule.created] constructor...
   PlatoSectionsChooserModule.created() : super.created();
 
   /// The [ready] method...
@@ -35,13 +43,19 @@ class PlatoSectionsChooserModule extends PolymerElement {
     _sections = $['sections-chooser'] as PlatoSectionsChooser;
 
     this.on['term-for-course'].listen ((CustomEvent event) {
-      print ('term for course ${event.detail}');
       _courses.term = event.detail['key'];
     });
 
     this.on['department-for-course'].listen ((CustomEvent event) {
-      print ('department for course ${event.detail}');
       _courses.department = event.detail['key'];
+    });
+
+    this.on['course-for-sections'].listen ((CustomEvent event) {
+      _sections.loadSections (event.detail['term'], event.detail['course']);
+    });
+
+    this.on['sections-selected'].listen ((CustomEvent event) {
+      List<String> sections = event.detail['sections'];
     });
   }
 

@@ -3,7 +3,12 @@
 <polymer-element name="plato-simple-chooser">
   <template>
     <link rel="stylesheet" href="style/plato-paper-common.css">
-    <div class="widget">
+    <style type="text/css">
+      div#simple-chooser-widget {
+        width: 480px;
+      }
+    </style>
+    <div class="widget" id="simple-chooser-widget">
       <label for="selectId">Select a {{type}}:</label> &nbsp;
       <select id="selectId" on-change="{{triggerOptionSelected}}">
         <option template repeat="{{optionKey in options.keys}}" value="{{optionKey}}">

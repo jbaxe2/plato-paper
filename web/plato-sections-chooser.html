@@ -3,12 +3,14 @@
 <link rel="import" href="packages/paper_elements/paper_button.html">
 <link rel="import" href="packages/paper_elements/paper_checkbox.html">
 
+<link rel="import" href="plato-communicator.html">
+
 <polymer-element name="plato-sections-chooser">
   <template>
     <link rel="stylesheet" href="style/plato-paper-common.css">
     <style type="text/css">
       div#sections-chooser-widget {
-        width:  480px;
+        width: 480px;
       }
 
       p {
@@ -38,7 +40,9 @@
     </style>
     <div class="widget" id="sections-chooser-widget">
       <template if="{{sections.length == 0}}">
-        <p>There are no sections available for the selected course and term.</p>
+        <p id="no-sections-description">
+          There are no sections available for the selected course and term.
+        </p>
       </template>
 
       <template if="{{sections.length > 0}}">
@@ -47,21 +51,26 @@
           <template repeat="{{sectionKey in sections.keys}}">
             <br><paper-checkbox
               id="{{sectionKey}}_checkbox"
-              on-change="{{toggleSectionSelected}}"
-            ></paper-checkbox>
+              on-change="{{toggleSectionSelected}}">
+            </paper-checkbox>
             <span>{{sections[sectionKey]}}</span><br>
           </template>
         </fieldset><br>
 
         <paper-button
           style="background-color: #537ba4; margin-left: 2px;"
-          label="Add the above selected to the request"
           icon="add-circle-outline"
-          raisedButton
-          on-click="{{signalSectionsSelected}}"
-        ></paper-button>
+          raised
+          on-click="{{signalSectionsSelected}}">
+            Add the above selected to the request
+        </paper-button>
       </template>
     </div>
+    <plato-communicator
+      id="sections-communicator"
+      url="/dart/retrieve/sections"
+      successSignal="sections-loaded"
+      errorSignal="sections-failed"></plato-communicator>
   </template>
   <script type="application/dart" src="plato-sections-chooser.dart"></script>
 </polymer-element>

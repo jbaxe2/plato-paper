@@ -76,8 +76,6 @@ class PlatoCourseChooser extends PolymerElement {
 
   /// The [_loadCourses] method...
   void _loadCourses() {
-    print ('got here to _loadCourses with $term and $department');
-
     if (('no-term' == term) || ('no-department' == department)) {
       throw new PlatoPaperEventException (
         'Cannot retrieve a list of courses missing the department or term.'
@@ -85,14 +83,12 @@ class PlatoCourseChooser extends PolymerElement {
     }
 
     _communicator
-      ..url += '?term=$term&dept=$department'
+      ..addParams ({'term': term, 'dept': department})
       ..send();
   }
 
   /// The [coursesLoaded] method...
   void coursesLoaded (CustomEvent event) {
-    print ('got here to coursesLoaded with ${event.detail}');
-
     Map<String, List> courses = event.detail as Map;
 
     courses['courses'].forEach ((Map course) {
@@ -100,6 +96,8 @@ class PlatoCourseChooser extends PolymerElement {
         {course['id']: course['title']}
       );
     });
+
+    _simpleChooser.options['no-course'] = 'Please select a course...';
   }
 
   /// The [coursesFailed] method...
@@ -109,7 +107,11 @@ class PlatoCourseChooser extends PolymerElement {
 
   /// The [courseSelected] method...
   void courseSelected (CustomEvent event) {
-    print ('got to course selected with ${event.detail}');
+    this.fire (
+      'course-for-sections',
+      detail: {'term': term, 'course': event.detail['key']},
+      onNode: this.parent
+    );
   }
 
   /// The [addCourses] method is used to add a [Map] of key/value [String]s,

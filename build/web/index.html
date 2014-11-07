@@ -4946,7 +4946,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <polymer-element name="plato-communicator" attributes="url successSignal errorSignal">
   <template>
-    <core-ajax-dart id="ajax" url="{{url}}" method="{{method}}" params="{{params}}" body="{{body}}" handleas="json" on-core-response="{{handleResponse}}">
+    <core-ajax-dart id="ajax" contenttype="application/json" url="{{url}}" method="{{method}}" params="{{params}}" body="{{body}}" handleas="json" on-core-response="{{handleResponse}}">
     </core-ajax-dart>
   </template>
   
@@ -4959,7 +4959,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <polymer-element name="plato-simple-chooser">
   <template>
     <link rel="stylesheet" href="style/plato-paper-common.css">
-    <div class="widget">
+    <style type="text/css">
+      div#simple-chooser-widget {
+        width: 480px;
+      }
+    </style>
+    <div class="widget" id="simple-chooser-widget">
       <label for="selectId">Select a {{type}}:</label> &nbsp;
       <select id="selectId" on-change="{{triggerOptionSelected}}">
         <option template="" repeat="{{optionKey in options.keys}}" value="{{optionKey}}">
@@ -7114,12 +7119,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 
+
+
 <polymer-element name="plato-sections-chooser">
   <template>
     <link rel="stylesheet" href="style/plato-paper-common.css">
     <style type="text/css">
       div#sections-chooser-widget {
-        width:  480px;
+        width: 480px;
       }
 
       p {
@@ -7149,21 +7156,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
     <div class="widget" id="sections-chooser-widget">
       <template if="{{sections.length == 0}}">
-        <p>There are no sections available for the selected course and term.</p>
+        <p id="no-sections-description">
+          There are no sections available for the selected course and term.
+        </p>
       </template>
 
       <template if="{{sections.length > 0}}">
         <fieldset>
           <legend>Check sections in the following list to add to the request:</legend>
           <template repeat="{{sectionKey in sections.keys}}">
-            <br><paper-checkbox id="{{sectionKey}}_checkbox" on-change="{{toggleSectionSelected}}"></paper-checkbox>
+            <br><paper-checkbox id="{{sectionKey}}_checkbox" on-change="{{toggleSectionSelected}}">
+            </paper-checkbox>
             <span>{{sections[sectionKey]}}</span><br>
           </template>
         </fieldset><br>
 
-        <paper-button style="background-color: #537ba4; margin-left: 2px;" label="Add the above selected to the request" icon="add-circle-outline" raisedbutton="" on-click="{{signalSectionsSelected}}"></paper-button>
+        <paper-button style="background-color: #537ba4; margin-left: 2px;" icon="add-circle-outline" raised="" on-click="{{signalSectionsSelected}}">
+            Add the above selected to the request
+        </paper-button>
       </template>
     </div>
+    <plato-communicator id="sections-communicator" url="/dart/retrieve/sections" successsignal="sections-loaded" errorsignal="sections-failed"></plato-communicator>
   </template>
   
 </polymer-element>
@@ -8284,9 +8297,9 @@ polyfill-next-selector { content: ':host > *:not(.core-selected):not([animate])'
 
 <polymer-element name="plato-sections-chooser-module">
   <template>
-    <plato-department-chooser id="department-chooser"></plato-department-chooser>
-    <plato-term-chooser id="term-chooser"></plato-term-chooser>
-    <plato-course-chooser id="course-chooser" term="{{term}}" department="{{department}}"></plato-course-chooser>
+    <plato-department-chooser id="department-chooser"></plato-department-chooser><br>
+    <plato-term-chooser id="term-chooser"></plato-term-chooser><br>
+    <plato-course-chooser id="course-chooser" term="{{term}}" department="{{department}}"></plato-course-chooser><br>
     <plato-sections-chooser id="sections-chooser"></plato-sections-chooser>
   </template>
   
@@ -8314,8 +8327,6 @@ div {
 }
 </style></div>
     <p>Plato Paper elements prototyping (for future Plato-based web applications).</p>
-
-    <plato-association-maker></plato-association-maker><br>
 
     <plato-sections-chooser-module></plato-sections-chooser-module>
   
