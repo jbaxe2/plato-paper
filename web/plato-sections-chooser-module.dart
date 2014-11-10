@@ -12,10 +12,10 @@ import 'plato-term-chooser.dart';
 /// A Polymer-based element, using paper elements, to display departments.
 @CustomTag('plato-sections-chooser-module')
 class PlatoSectionsChooserModule extends PolymerElement {
-  ///
+  /// The term ID for the courses and sections.
   @observable String term;
 
-  ///
+  /// The department ID for the courses and sections.
   @observable String department;
 
   /// The 'plato-department-chooser' element for choosing the department.
@@ -55,10 +55,10 @@ class PlatoSectionsChooserModule extends PolymerElement {
     });
 
     this.on['sections-selected'].listen ((CustomEvent event) {
-      List<String> sections = event.detail['sections'];
+      sectionsSelected (event.detail['sections']);
     });
   }
 
-  /// The [sectionsLoaded] method...
-  void sectionsLoaded (CustomEvent event) {}
+  /// The [sectionsSelected] method...
+  void sectionsSelected (List<String> sections) {}
 }

@@ -81,8 +81,6 @@ class PlatoSectionsChooser extends PolymerElement {
   /// fires the 'sections-selected' event.
   void signalSectionsSelected (Event event, Object details, Element target) {
     if (0 < _sectionsSelected.length) {
-      print (_sectionsSelected.keys);
-
       this.fire (
         'sections-selected',
         detail: {'sections': _sectionsSelected.keys},
