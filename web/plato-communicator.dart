@@ -113,7 +113,7 @@ class PlatoCommunicator extends PolymerElement {
   /// HTTP method may be passed, which defaults to 'GET' (currently only supports
   /// 'GET' and 'POST' methods).  If there are parameters to be sent, but which are
   /// not JSON-encodable, a [CommunicationsException] instance will be thrown.
-  void send ([String theMethod='GET']) {
+  void send ([String theMethod = 'GET']) {
     if (0 < _params.length) {
       try {
         String jsonParams = JSON.encode (_params);

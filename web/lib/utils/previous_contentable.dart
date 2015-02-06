@@ -18,12 +18,12 @@ abstract class PreviousContentable {
   /// The requested setter only allows it to be set provided it does not match
   /// (either identical or equatable) the previous [Requestable] instance.
   set requested (Requestable requested) =>
-    (requested != _previous) ? requested : null;
+    (requested != _previous) ? _requested = requested : null;
 
   /// The previous setter only allows it to be set provided it does not match
   /// (either identical or equatable) the requested [Requestable] instance.
   set previous (Requestable previous) =>
-    (previous != _requested) ? previous : null;
+    (previous != _requested) ? _previous = previous : null;
 
   Requestable get requested => _requested;
   Requestable get previous => _previous;

@@ -9,10 +9,10 @@ import './lib/errors/plato_paper_errors.dart' show PlatoPaperEventException;
 /// A Polymer-based element, using paper elements, to display semester terms.
 @CustomTag('plato-simple-chooser')
 class PlatoSimpleChooser extends PolymerElement {
-  /// A [Map] of [String] key/value pairs serving the data model for this custom
-  /// element, whereby the keys represent the ID's for the options and the values
-  /// represent the descriptions.
-  @observable Map<String, String> options;
+  /// A [Map] of [String] key/value pairs effectively serving as the data model
+  /// for this custom element, whereby the keys represent the ID's for the
+  /// options and the values represent the descriptions.
+  @observable ObservableMap<String, String> options;
 
   /// A [String] representing the type of chooser.
   @observable String type;
@@ -29,7 +29,7 @@ class PlatoSimpleChooser extends PolymerElement {
   /// The [PlatoSimpleChooser.created] method initializes the options model
   /// that will be used for this element's select element's options children.
   PlatoSimpleChooser.created() : super.created() {
-    options = toObservable (new Map<String, String>());
+    options = new ObservableMap<String, String>();
   }
 
   /// The [addOption] method is used to add a [Map] of [String] key/value
@@ -40,7 +40,7 @@ class PlatoSimpleChooser extends PolymerElement {
   }
 
   /// The [triggerOptionSelected] method is invoked automatically once a user
-  /// has selected a term, firing the event specified by a subclass's signal
+  /// has selected an option, firing the event specified by a subclass's signal
   /// field.
   void triggerOptionSelected (Event event, var details, Element target) {
     if (null == _signal) {

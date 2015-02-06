@@ -60,5 +60,7 @@ class PlatoSectionsChooserModule extends PolymerElement {
   }
 
   /// The [sectionsSelected] method...
-  void sectionsSelected (List<String> sections) {}
+  void sectionsSelected (List<String> sections) {
+    //sections.forEach ((String section) => print (section));
+  }
 }

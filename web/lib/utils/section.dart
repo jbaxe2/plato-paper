@@ -45,13 +45,10 @@ class Section extends Requestable {
   bool isDay() {
     String digitStr = _section.substring (_section.length - 3, _section.length - 2);
 
-    // Dual enrollment, and DGCE sections for Day division cross-registration.
-    if (('R' == digitStr) || ('E' == digitStr)) {
-      return false;
-    }
-
+    // Dual enrollment, Day division sections for DGCE course cross-registration,
     // Day division honors courses, and whatever a 'P' section refers to.
-    if (('H' == digitStr) || ('P' == digitStr)) {
+    if (('R' == digitStr) || ('E' == digitStr) ||
+        ('H' == digitStr) || ('P' == digitStr)) {
       return true;
     }
 

@@ -13,7 +13,7 @@ class PlatoSectionsChooser extends PolymerElement {
   /// A [Map] of [String] key/value pairs serving as the data model for this
   /// custom element, for which the keys represent section ID's and the values
   /// represent section titles.
-  @observable Map<String, String> sections;
+  @observable ObservableMap<String, String> sections;
 
   /// A [Map] of [String] and [PaperCheckbox] instances used by the user to
   /// specify which sections should be selected as part of a dynamic listing.
@@ -23,7 +23,7 @@ class PlatoSectionsChooser extends PolymerElement {
   PlatoCommunicator _communicator;
 
   PlatoSectionsChooser.created() : super.created() {
-    sections = toObservable (new Map<String, String>());
+    sections = new ObservableMap<String, String>();
 
     _sectionsSelected = new Map<String, PaperCheckbox>();
   }
@@ -52,6 +52,9 @@ class PlatoSectionsChooser extends PolymerElement {
 
   /// The [sectionsLoaded] method...
   void sectionsLoaded (CustomEvent event) {
+    sections.clear();
+    print (sections.length);
+
     event.detail['sections'].forEach ((Map<String, String> sectionInfo) {
       addSection ({sectionInfo['id']: sectionInfo['title']});
     });

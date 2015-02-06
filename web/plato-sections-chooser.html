@@ -47,7 +47,9 @@
 
       <template if="{{sections.length > 0}}">
         <fieldset>
-          <legend>Check sections in the following list to add to the request:</legend>
+          <legend>
+            Check sections in the following list to add to the request:
+          </legend>
           <template repeat="{{sectionKey in sections.keys}}">
             <br><paper-checkbox
               id="{{sectionKey}}_checkbox"

@@ -1,7 +1,5 @@
 library plato.paper.utils;
 
-import 'dart:convert';
-
 import '../errors/plato_paper_errors.dart';
 
 // Information which provides user context.
