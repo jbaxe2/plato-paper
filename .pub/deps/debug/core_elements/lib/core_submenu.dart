@@ -1,13 +1,16 @@
 // DO NOT EDIT: auto-generated with `pub run custom_element_apigen:update`
 
 /// Dart API for the polymer element `core_submenu`.
+@HtmlImport('core_submenu_nodart.html')
 library core_elements.core_submenu;
 
 import 'dart:html';
 import 'dart:js' show JsArray, JsObject;
-import 'package:web_components/interop.dart' show registerDartType;
-import 'package:polymer/polymer.dart' show initMethod;
-import 'package:custom_element_apigen/src/common.dart' show DomProxyMixin;
+import 'package:web_components/web_components.dart';
+import 'package:polymer_interop/polymer_interop.dart';
+import 'core_item.dart';
+import 'core_menu.dart';
+import 'core_collapse.dart';
 
 /// Use to create nested menus inside of `core-menu` elements.
 ///
@@ -52,29 +55,31 @@ import 'package:custom_element_apigen/src/common.dart' show DomProxyMixin;
 ///       <core-item label="Topic1"></core-item>
 ///       <core-item label="Topic2"></core-item>
 ///     </core-submenu>
-class CoreSubmenu extends HtmlElement with DomProxyMixin {
+@CustomElementProxy('core-submenu')
+class CoreSubmenu extends HtmlElement with CustomElementProxyMixin, PolymerProxyMixin {
   CoreSubmenu.created() : super.created();
   factory CoreSubmenu() => new Element.tag('core-submenu');
 
-  get selected => jsElement['selected'];
-  set selected(value) { jsElement['selected'] = (value is Map || value is Iterable) ? new JsObject.jsify(value) : value;}
+  get selected => jsElement[r'selected'];
+  set selected(value) { jsElement[r'selected'] = (value is Map || value is Iterable) ? new JsObject.jsify(value) : value;}
 
-  get selectedItem => jsElement['selectedItem'];
-  set selectedItem(value) { jsElement['selectedItem'] = (value is Map || value is Iterable) ? new JsObject.jsify(value) : value;}
+  get selectedItem => jsElement[r'selectedItem'];
+  set selectedItem(value) { jsElement[r'selectedItem'] = (value is Map || value is Iterable) ? new JsObject.jsify(value) : value;}
 
-  get label => jsElement['label'];
-  set label(value) { jsElement['label'] = (value is Map || value is Iterable) ? new JsObject.jsify(value) : value;}
+  get selectedAttribute => jsElement[r'selectedAttribute'];
+  set selectedAttribute(value) { jsElement[r'selectedAttribute'] = (value is Map || value is Iterable) ? new JsObject.jsify(value) : value;}
 
-  get icon => jsElement['icon'];
-  set icon(value) { jsElement['icon'] = (value is Map || value is Iterable) ? new JsObject.jsify(value) : value;}
+  get label => jsElement[r'label'];
+  set label(value) { jsElement[r'label'] = (value is Map || value is Iterable) ? new JsObject.jsify(value) : value;}
 
-  get src => jsElement['src'];
-  set src(value) { jsElement['src'] = (value is Map || value is Iterable) ? new JsObject.jsify(value) : value;}
+  get icon => jsElement[r'icon'];
+  set icon(value) { jsElement[r'icon'] = (value is Map || value is Iterable) ? new JsObject.jsify(value) : value;}
 
-  get valueattr => jsElement['valueattr'];
-  set valueattr(value) { jsElement['valueattr'] = (value is Map || value is Iterable) ? new JsObject.jsify(value) : value;}
+  get src => jsElement[r'src'];
+  set src(value) { jsElement[r'src'] = (value is Map || value is Iterable) ? new JsObject.jsify(value) : value;}
 
-  get items => jsElement['items'];
+  get valueattr => jsElement[r'valueattr'];
+  set valueattr(value) { jsElement[r'valueattr'] = (value is Map || value is Iterable) ? new JsObject.jsify(value) : value;}
+
+  get items => jsElement[r'items'];
 }
-@initMethod
-upgradeCoreSubmenu() => registerDartType('core-submenu', CoreSubmenu);

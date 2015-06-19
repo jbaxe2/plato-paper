@@ -1,13 +1,15 @@
 // DO NOT EDIT: auto-generated with `pub run custom_element_apigen:update`
 
 /// Dart API for the polymer element `core_iconset_svg`.
+@HtmlImport('core_iconset_svg_nodart.html')
 library core_elements.core_iconset_svg;
 
 import 'dart:html';
 import 'dart:js' show JsArray, JsObject;
-import 'package:web_components/interop.dart' show registerDartType;
-import 'package:polymer/polymer.dart' show initMethod;
+import 'package:web_components/web_components.dart';
+import 'package:polymer_interop/polymer_interop.dart';
 import 'core_meta.dart';
+import 'core_iconset.dart';
 
 /// The `core-iconset-svg` element allows users to define their own icon sets
 /// that contain svg icons. The svg icon elements should be children of the
@@ -38,15 +40,16 @@ import 'core_meta.dart';
 /// element use the `applyIcon` method. For example:
 ///
 ///     iconset.applyIcon(iconNode, 'car');
+@CustomElementProxy('core-iconset-svg')
 class CoreIconsetSvg extends CoreMeta {
   CoreIconsetSvg.created() : super.created();
   factory CoreIconsetSvg() => new Element.tag('core-iconset-svg');
 
   /// The size of an individual icon. Note that icons must be square.
-  num get iconSize => jsElement['iconSize'];
-  set iconSize(num value) { jsElement['iconSize'] = value; }
+  num get iconSize => jsElement[r'iconSize'];
+  set iconSize(num value) { jsElement[r'iconSize'] = value; }
 
-  get iconNames => jsElement['iconNames'];
+  get iconNames => jsElement[r'iconNames'];
 
   /// Applies an icon to the given element. The svg icon is added to the
   /// element's shadowRoot if one exists or directly to itself.
@@ -55,7 +58,7 @@ class CoreIconsetSvg extends CoreMeta {
   /// [element]: The element to which the icon is
   ///     applied.
   /// [icon]: The name the icon to apply.
-  applyIcon(element, icon) =>
+  applyIcon(Element element, icon) =>
       jsElement.callMethod('applyIcon', [element, icon]);
 
   /// Tell users of the iconset, that the set has loaded.
@@ -68,5 +71,3 @@ class CoreIconsetSvg extends CoreMeta {
   void updateIcons(String css, String method) =>
       jsElement.callMethod('updateIcons', [css, method]);
 }
-@initMethod
-upgradeCoreIconsetSvg() => registerDartType('core-iconset-svg', CoreIconsetSvg);

@@ -1,13 +1,13 @@
 // DO NOT EDIT: auto-generated with `pub run custom_element_apigen:update`
 
 /// Dart API for the polymer element `paper_ripple`.
+@HtmlImport('paper_ripple_nodart.html')
 library paper_elements.paper_ripple;
 
 import 'dart:html';
 import 'dart:js' show JsArray, JsObject;
-import 'package:web_components/interop.dart' show registerDartType;
-import 'package:polymer/polymer.dart' show initMethod;
-import 'package:custom_element_apigen/src/common.dart' show DomProxyMixin;
+import 'package:web_components/web_components.dart';
+import 'package:polymer_interop/polymer_interop.dart';
 
 /// `paper-ripple` provides a visual effect that other paper elements can
 /// use to simulate a rippling effect emanating from the point of contact.  The
@@ -45,24 +45,24 @@ import 'package:custom_element_apigen/src/common.dart' show DomProxyMixin;
 ///   Note that CSS color property is inherited so it is not required to set it on
 ///   the `paper-ripple` element directly.
 ///
-/// Apply `recenteringTouch` class to make the recentering rippling effect.
+/// By default, the ripple is centered on the point of contact.  Apply `recenteringTouch`
+/// class to have the ripple grow toward the center of its container.
 ///
 ///     <paper-ripple class="recenteringTouch"></paper-ripple>
 ///
 /// Apply `circle` class to make the rippling effect within a circle.
 ///
 ///     <paper-ripple class="circle"></paper-ripple>
-class PaperRipple extends HtmlElement with DomProxyMixin {
+@CustomElementProxy('paper-ripple')
+class PaperRipple extends HtmlElement with CustomElementProxyMixin, PolymerProxyMixin {
   PaperRipple.created() : super.created();
   factory PaperRipple() => new Element.tag('paper-ripple');
 
   /// The initial opacity set on the wave.
-  num get initialOpacity => jsElement['initialOpacity'];
-  set initialOpacity(num value) { jsElement['initialOpacity'] = value; }
+  num get initialOpacity => jsElement[r'initialOpacity'];
+  set initialOpacity(num value) { jsElement[r'initialOpacity'] = value; }
 
   /// How fast (opacity per second) the wave fades out.
-  num get opacityDecayVelocity => jsElement['opacityDecayVelocity'];
-  set opacityDecayVelocity(num value) { jsElement['opacityDecayVelocity'] = value; }
+  num get opacityDecayVelocity => jsElement[r'opacityDecayVelocity'];
+  set opacityDecayVelocity(num value) { jsElement[r'opacityDecayVelocity'] = value; }
 }
-@initMethod
-upgradePaperRipple() => registerDartType('paper-ripple', PaperRipple);

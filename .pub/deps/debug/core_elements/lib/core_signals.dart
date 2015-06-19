@@ -1,13 +1,13 @@
 // DO NOT EDIT: auto-generated with `pub run custom_element_apigen:update`
 
 /// Dart API for the polymer element `core_signals`.
+@HtmlImport('core_signals_nodart.html')
 library core_elements.core_signals;
 
 import 'dart:html';
 import 'dart:js' show JsArray, JsObject;
-import 'package:web_components/interop.dart' show registerDartType;
-import 'package:polymer/polymer.dart' show initMethod;
-import 'package:custom_element_apigen/src/common.dart' show DomProxyMixin;
+import 'package:web_components/web_components.dart';
+import 'package:polymer_interop/polymer_interop.dart';
 
 /// `core-signals` provides basic publish-subscribe functionality.
 ///
@@ -21,16 +21,15 @@ import 'package:custom_element_apigen/src/common.dart' show DomProxyMixin;
 ///     this.fire('core-signal', {name: 'hello', data: null});
 ///
 /// To receive a signal, listen for `core-signal-<name>` event on a
-/// `core-signal` element.
+/// `core-signals` element.
 ///
-///   <core-signal on-core-signal-hello="{{helloSignal}}">
+///   <core-signals on-core-signal-hello="{{helloSignal}}">
 ///
 /// You can fire a signal event from anywhere, and all
-/// `core-signal` elements will receive the event, regardless
+/// `core-signals` elements will receive the event, regardless
 /// of where they are in DOM.
-class CoreSignals extends HtmlElement with DomProxyMixin {
+@CustomElementProxy('core-signals')
+class CoreSignals extends HtmlElement with CustomElementProxyMixin, PolymerProxyMixin {
   CoreSignals.created() : super.created();
   factory CoreSignals() => new Element.tag('core-signals');
 }
-@initMethod
-upgradeCoreSignals() => registerDartType('core-signals', CoreSignals);

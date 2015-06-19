@@ -1,12 +1,13 @@
 // DO NOT EDIT: auto-generated with `pub run custom_element_apigen:update`
 
 /// Dart API for the polymer element `core_transition_css`.
+@HtmlImport('core_transition_css_nodart.html')
 library core_elements.core_transition_css;
 
 import 'dart:html';
 import 'dart:js' show JsArray, JsObject;
-import 'package:web_components/interop.dart' show registerDartType;
-import 'package:polymer/polymer.dart' show initMethod;
+import 'package:web_components/web_components.dart';
+import 'package:polymer_interop/polymer_interop.dart';
 import 'core_transition.dart';
 
 /// `<core-transition-css>` implements CSS transitions as `<core-transition>` objects so they can be
@@ -94,6 +95,7 @@ import 'core_transition.dart';
 /// `core-transition-left`: Slides the node into the final position from the left.
 ///
 /// `core-transition-right`: Slides the node into the final position from the right.
+@CustomElementProxy('core-transition-css')
 class CoreTransitionCss extends CoreTransition {
   CoreTransitionCss.created() : super.created();
   factory CoreTransitionCss() => new Element.tag('core-transition-css');
@@ -101,24 +103,22 @@ class CoreTransitionCss extends CoreTransition {
   /// A secondary configuration attribute for the animation. The class
   /// `<baseClass>-<transitionType` is applied to the animated node during
   /// `setup`.
-  String get transitionType => jsElement['transitionType'];
-  set transitionType(String value) { jsElement['transitionType'] = value; }
+  String get transitionType => jsElement[r'transitionType'];
+  set transitionType(String value) { jsElement[r'transitionType'] = value; }
 
   /// The class that will be applied to all animated nodes.
-  String get baseClass => jsElement['baseClass'];
-  set baseClass(String value) { jsElement['baseClass'] = value; }
+  String get baseClass => jsElement[r'baseClass'];
+  set baseClass(String value) { jsElement[r'baseClass'] = value; }
 
   /// The class that will be applied to nodes in the opened state.
-  String get openedClass => jsElement['openedClass'];
-  set openedClass(String value) { jsElement['openedClass'] = value; }
+  String get openedClass => jsElement[r'openedClass'];
+  set openedClass(String value) { jsElement[r'openedClass'] = value; }
 
   /// The class that will be applied to nodes in the closed state.
-  String get closedClass => jsElement['closedClass'];
-  set closedClass(String value) { jsElement['closedClass'] = value; }
+  String get closedClass => jsElement[r'closedClass'];
+  set closedClass(String value) { jsElement[r'closedClass'] = value; }
 
   /// Event to listen to for animation completion.
-  String get completeEventName => jsElement['completeEventName'];
-  set completeEventName(String value) { jsElement['completeEventName'] = value; }
+  String get completeEventName => jsElement[r'completeEventName'];
+  set completeEventName(String value) { jsElement[r'completeEventName'] = value; }
 }
-@initMethod
-upgradeCoreTransitionCss() => registerDartType('core-transition-css', CoreTransitionCss);

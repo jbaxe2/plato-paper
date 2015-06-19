@@ -1,13 +1,16 @@
 // DO NOT EDIT: auto-generated with `pub run custom_element_apigen:update`
 
 /// Dart API for the polymer element `core_animated_pages`.
+@HtmlImport('core_animated_pages_nodart.html')
 library core_elements.core_animated_pages;
 
 import 'dart:html';
 import 'dart:js' show JsArray, JsObject;
-import 'package:web_components/interop.dart' show registerDartType;
-import 'package:polymer/polymer.dart' show initMethod;
+import 'package:web_components/web_components.dart';
+import 'package:polymer_interop/polymer_interop.dart';
 import 'core_selector.dart';
+import 'core_resizer.dart';
+import 'core_resizable.dart';
 
 /// `core-animated-pages` selects one of its children "pages" to show and runs a transition
 /// when switching between them. The transitions are designed to be pluggable, and can
@@ -210,20 +213,19 @@ import 'core_selector.dart';
 ///       <section id="page1"></section>
 ///       <nested-page id="page2"></nested-page>
 ///     </core-animated-pages>
-class CoreAnimatedPages extends CoreSelector {
+@CustomElementProxy('core-animated-pages')
+class CoreAnimatedPages extends CoreSelector with CoreResizable, CoreResizer {
   CoreAnimatedPages.created() : super.created();
   factory CoreAnimatedPages() => new Element.tag('core-animated-pages');
 
   /// A space-delimited string of transitions to use when switching between pages in this element.
   /// The strings are `id`s of `core-transition-pages` elements included elsewhere. See the
   /// individual transition's document for specific details.
-  String get transitions => jsElement['transitions'];
-  set transitions(String value) { jsElement['transitions'] = value; }
+  String get transitions => jsElement[r'transitions'];
+  set transitions(String value) { jsElement[r'transitions'] = value; }
 
   /// The last page selected. This property is useful to dynamically set transitions based
   /// on incoming and outgoing pages.
-  get lastSelected => jsElement['lastSelected'];
-  set lastSelected(value) { jsElement['lastSelected'] = (value is Map || value is Iterable) ? new JsObject.jsify(value) : value;}
+  get lastSelected => jsElement[r'lastSelected'];
+  set lastSelected(value) { jsElement[r'lastSelected'] = (value is Map || value is Iterable) ? new JsObject.jsify(value) : value;}
 }
-@initMethod
-upgradeCoreAnimatedPages() => registerDartType('core-animated-pages', CoreAnimatedPages);

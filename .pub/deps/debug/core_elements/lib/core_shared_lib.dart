@@ -1,13 +1,13 @@
 // DO NOT EDIT: auto-generated with `pub run custom_element_apigen:update`
 
 /// Dart API for the polymer element `core_shared_lib`.
+@HtmlImport('core_shared_lib_nodart.html')
 library core_elements.core_shared_lib;
 
 import 'dart:html';
 import 'dart:js' show JsArray, JsObject;
-import 'package:web_components/interop.dart' show registerDartType;
-import 'package:polymer/polymer.dart' show initMethod;
-import 'package:custom_element_apigen/src/common.dart' show DomProxyMixin;
+import 'package:web_components/web_components.dart';
+import 'package:polymer_interop/polymer_interop.dart';
 
 /// Supports sharing a JSONP-based JavaScript library.
 ///
@@ -26,18 +26,17 @@ import 'package:custom_element_apigen/src/common.dart' show DomProxyMixin;
 /// lib.html:
 ///
 ///     <script src="lib.js"></script>
-class CoreSharedLib extends HtmlElement with DomProxyMixin {
+@CustomElementProxy('core-shared-lib')
+class CoreSharedLib extends HtmlElement with CustomElementProxyMixin, PolymerProxyMixin {
   CoreSharedLib.created() : super.created();
   factory CoreSharedLib() => new Element.tag('core-shared-lib');
 
-  get url => jsElement['url'];
-  set url(value) { jsElement['url'] = (value is Map || value is Iterable) ? new JsObject.jsify(value) : value;}
+  get url => jsElement[r'url'];
+  set url(value) { jsElement[r'url'] = (value is Map || value is Iterable) ? new JsObject.jsify(value) : value;}
 
-  get notifyEvent => jsElement['notifyEvent'];
-  set notifyEvent(value) { jsElement['notifyEvent'] = (value is Map || value is Iterable) ? new JsObject.jsify(value) : value;}
+  get notifyEvent => jsElement[r'notifyEvent'];
+  set notifyEvent(value) { jsElement[r'notifyEvent'] = (value is Map || value is Iterable) ? new JsObject.jsify(value) : value;}
 
-  get callbackName => jsElement['callbackName'];
-  set callbackName(value) { jsElement['callbackName'] = (value is Map || value is Iterable) ? new JsObject.jsify(value) : value;}
+  get callbackName => jsElement[r'callbackName'];
+  set callbackName(value) { jsElement[r'callbackName'] = (value is Map || value is Iterable) ? new JsObject.jsify(value) : value;}
 }
-@initMethod
-upgradeCoreSharedLib() => registerDartType('core-shared-lib', CoreSharedLib);

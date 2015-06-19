@@ -35,6 +35,7 @@
 ///
 /// * [Upgrading to Polymer.dart](http://www.dartlang.org/polymer-dart/upgrading-to-polymer-from-web-ui.html):
 /// Tips for converting your apps from Web UI to Polymer.dart.
+@HtmlImport('polymer.html')
 library polymer;
 
 import 'dart:async';
@@ -43,39 +44,33 @@ import 'dart:html';
 import 'dart:js' as js show context;
 import 'dart:js' hide context;
 
-// *** Important Note ***
-// This import is automatically replaced when calling pub build by the
-// mirrors_remover transformer. The transformer will remove any dependencies on
-// dart:mirrors in deployed polymer apps. This and the import to
-// mirror_loader.dart below should be updated in sync with changed in
-// lib/src/build/mirrors_remover.dart.
-//
-// Technically this annotation is not needed now that we have codegen for
-// expressions, but our test bots don't run pub-build yet. Until then, tests
-// might (transitively) have an import to smoke.mirrors, even though the code is
-// completely dead. This @MirrorsUsed annotation helps reduce the load on our
-// bots.
-
-
+import 'package:initialize/initialize.dart' hide run;
 import 'package:logging/logging.dart';
 import 'package:observe/observe.dart';
 import 'package:observe/src/dirty_check.dart' show dirtyCheckZone;
 import 'package:polymer_expressions/polymer_expressions.dart'
     as polymer_expressions;
+import 'package:polymer_interop/polymer_interop.dart';
 import 'package:smoke/smoke.dart' as smoke;
 import 'package:template_binding/template_binding.dart';
+import 'package:web_components/web_components.dart';
 
 import 'auto_binding.dart';
 import 'deserialize.dart' as deserialize;
-import 'src/static_loader.dart' as loader; // ** see important note above
 
+export 'package:initialize/initialize.dart' show initMethod;
 export 'package:observe/observe.dart';
 export 'package:observe/html.dart';
+export 'package:web_components/web_components.dart' show HtmlImport;
 export 'auto_binding.dart';
 
 part 'src/declaration.dart';
 part 'src/events.dart';
+part 'src/initializers.dart';
 part 'src/instance.dart';
 part 'src/job.dart';
 part 'src/loader.dart';
 part 'src/property_accessor.dart';
+
+/// Call [configureForDeployment] to change this to true.
+bool _deployMode = false;

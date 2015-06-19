@@ -36,7 +36,7 @@ class PlatoAssociationMaker extends PolymerElement {
   /// hash for the section or user to node association key.
   void makeAssociationKey() {
     if (0 == itemId.length || 0 == nodeId.length) {
-      PaperToast noAssociationToast = $['associationToast'] as PaperToast
+      $['associationToast'] as PaperToast
         ..text = "Both the section/user and node ID\'s must have values."
         ..show();
 

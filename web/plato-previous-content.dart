@@ -10,7 +10,6 @@ import './lib/errors/plato_paper_errors.dart' show PreviousContentException;
 class PlatoPreviousContent extends PolymerElement {
   @observable String requestableId = '';
   @observable String previousId = '';
-  @observable String whichSystem;
 
   /// A [Requestable] instance serving as the data model for the requestable
   /// item previous content will be copied/imported into.

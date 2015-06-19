@@ -1,13 +1,13 @@
 // DO NOT EDIT: auto-generated with `pub run custom_element_apigen:update`
 
 /// Dart API for the polymer element `core_meta`.
+@HtmlImport('core_meta_nodart.html')
 library core_elements.core_meta;
 
 import 'dart:html';
 import 'dart:js' show JsArray, JsObject;
-import 'package:web_components/interop.dart' show registerDartType;
-import 'package:polymer/polymer.dart' show initMethod;
-import 'package:custom_element_apigen/src/common.dart' show DomProxyMixin;
+import 'package:web_components/web_components.dart';
+import 'package:polymer_interop/polymer_interop.dart';
 
 /// `core-meta` provides a method of constructing a self-organizing database.
 /// It is useful to collate element meta-data for things like catalogs and for
@@ -50,29 +50,28 @@ import 'package:custom_element_apigen/src/common.dart' show DomProxyMixin;
 ///       meta.type = 'xElt';
 ///       console.log(meta.list);
 ///     </script>
-class CoreMeta extends HtmlElement with DomProxyMixin {
+@CustomElementProxy('core-meta')
+class CoreMeta extends HtmlElement with CustomElementProxyMixin, PolymerProxyMixin {
   CoreMeta.created() : super.created();
   factory CoreMeta() => new Element.tag('core-meta');
 
-  get label => jsElement['label'];
-  set label(value) { jsElement['label'] = (value is Map || value is Iterable) ? new JsObject.jsify(value) : value;}
+  get label => jsElement[r'label'];
+  set label(value) { jsElement[r'label'] = (value is Map || value is Iterable) ? new JsObject.jsify(value) : value;}
 
   /// The type of meta-data.  All meta-data with the same type with be
   /// stored together.
-  String get type => jsElement['type'];
-  set type(String value) { jsElement['type'] = value; }
+  String get type => jsElement[r'type'];
+  set type(String value) { jsElement[r'type'] = value; }
 
   /// Returns a list of all meta-data elements with the same type.
-  JsArray get list => jsElement['list'];
+  JsArray get list => jsElement[r'list'];
 
-  get metaArray => jsElement['metaArray'];
+  get metaArray => jsElement[r'metaArray'];
 
-  get metaData => jsElement['metaData'];
+  get metaData => jsElement[r'metaData'];
 
   /// Retrieves meta-data by ID.
   /// [id]: The ID of the meta-data to be returned.
   byId(String id) =>
       jsElement.callMethod('byId', [id]);
 }
-@initMethod
-upgradeCoreMeta() => registerDartType('core-meta', CoreMeta);

@@ -1,12 +1,13 @@
 // DO NOT EDIT: auto-generated with `pub run custom_element_apigen:update`
 
 /// Dart API for the polymer element `paper_progress`.
+@HtmlImport('paper_progress_nodart.html')
 library paper_elements.paper_progress;
 
 import 'dart:html';
 import 'dart:js' show JsArray, JsObject;
-import 'package:web_components/interop.dart' show registerDartType;
-import 'package:polymer/polymer.dart' show initMethod;
+import 'package:web_components/web_components.dart';
+import 'package:polymer_interop/polymer_interop.dart';
 import 'package:core_elements/core_range.dart';
 
 /// The progress bars are for situations where the percentage completed can be
@@ -22,7 +23,7 @@ import 'package:core_elements/core_range.dart';
 ///
 /// Example:
 ///
-///     <paper-progress value="10" secondaryProgesss="30"></paper-progress>
+///     <paper-progress value="10" secondaryProgress="30"></paper-progress>
 ///
 /// Styling progress bar:
 ///
@@ -43,13 +44,16 @@ import 'package:core_elements/core_range.dart';
 ///     paper-progress::shadow #progressContainer {
 ///       background-color: #64ffda;
 ///     }
+@CustomElementProxy('paper-progress')
 class PaperProgress extends CoreRange {
   PaperProgress.created() : super.created();
   factory PaperProgress() => new Element.tag('paper-progress');
 
   /// The number that represents the current secondary progress.
-  num get secondaryProgress => jsElement['secondaryProgress'];
-  set secondaryProgress(num value) { jsElement['secondaryProgress'] = value; }
+  num get secondaryProgress => jsElement[r'secondaryProgress'];
+  set secondaryProgress(num value) { jsElement[r'secondaryProgress'] = value; }
+
+  /// Use an indeterminate progress indicator.
+  bool get indeterminate => jsElement[r'indeterminate'];
+  set indeterminate(bool value) { jsElement[r'indeterminate'] = value; }
 }
-@initMethod
-upgradePaperProgress() => registerDartType('paper-progress', PaperProgress);

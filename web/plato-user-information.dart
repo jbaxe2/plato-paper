@@ -22,9 +22,9 @@ class PlatoUserInformation extends PolymerElement {
   }
 
   /// The [fillUserInformation] method is used to retrieve the user information
-  /// from the [UserInformation] instance, and set this custom element's fields as
-  /// appropriate.  If the [UserInformation] instance does not contain this information
-  /// yet, then a [UserInfoException] instance will be thrown.
+  /// from the [UserInformation] instance, and set this custom element's fields
+  /// as appropriate.  If the [UserInformation] instance does not contain this
+  /// information yet, then a [UserInfoException] instance will be thrown.
   void fillUserInformation() {
     if ((1 > _userInfo.username.length) || (1 > _userInfo.password.length)) {
       throw new UserInfoException (

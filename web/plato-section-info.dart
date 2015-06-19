@@ -63,7 +63,6 @@ class PlatoSectionInfo extends PolymerElement {
     switch ((sectionInfoMenu.selectedItem as CoreItem).icon) {
       case 'done-all': eventName = 'cross-list-section'; break;
       case 'content-copy': eventName = 'copy-learn-content'; break;
-      case 'inbox': eventName = 'import-vista-content'; break;
       case 'remove-circle-outline': eventName = 'close-section-info'; break;
       default: return;
     }

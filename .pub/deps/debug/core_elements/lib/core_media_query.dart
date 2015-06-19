@@ -1,13 +1,13 @@
 // DO NOT EDIT: auto-generated with `pub run custom_element_apigen:update`
 
 /// Dart API for the polymer element `core_media_query`.
+@HtmlImport('core_media_query_nodart.html')
 library core_elements.core_media_query;
 
 import 'dart:html';
 import 'dart:js' show JsArray, JsObject;
-import 'package:web_components/interop.dart' show registerDartType;
-import 'package:polymer/polymer.dart' show initMethod;
-import 'package:custom_element_apigen/src/common.dart' show DomProxyMixin;
+import 'package:web_components/web_components.dart';
+import 'package:polymer_interop/polymer_interop.dart';
 
 /// core-media-query can be used to data bind to a CSS media query.
 /// The "query" property is a bare CSS media query.
@@ -23,17 +23,16 @@ import 'package:custom_element_apigen/src/common.dart' show DomProxyMixin;
 ///
 ///
 /// Fired when the media query state changes
-class CoreMediaQuery extends HtmlElement with DomProxyMixin {
+@CustomElementProxy('core-media-query')
+class CoreMediaQuery extends HtmlElement with CustomElementProxyMixin, PolymerProxyMixin {
   CoreMediaQuery.created() : super.created();
   factory CoreMediaQuery() => new Element.tag('core-media-query');
 
   /// The CSS media query to evaulate
-  String get mediaQuery => jsElement['query'];
-  set mediaQuery(String value) { jsElement['query'] = value; }
+  String get mediaQuery => jsElement[r'query'];
+  set mediaQuery(String value) { jsElement[r'query'] = value; }
 
   /// The Boolean return value of the media query
-  bool get queryMatches => jsElement['queryMatches'];
-  set queryMatches(bool value) { jsElement['queryMatches'] = value; }
+  bool get queryMatches => jsElement[r'queryMatches'];
+  set queryMatches(bool value) { jsElement[r'queryMatches'] = value; }
 }
-@initMethod
-upgradeCoreMediaQuery() => registerDartType('core-media-query', CoreMediaQuery);

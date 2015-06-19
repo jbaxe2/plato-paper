@@ -6,17 +6,17 @@
 library polymer.transformer;
 
 import 'package:barback/barback.dart';
+import 'package:web_components/transformer.dart' as web_components;
 import 'package:observe/transformer.dart';
-import 'package:path/path.dart' as path;
 
 import 'src/build/build_filter.dart';
 import 'src/build/common.dart';
 import 'src/build/index_page_builder.dart';
-import 'src/build/import_inliner.dart';
+import 'src/build/html_finalizer.dart';
 import 'src/build/linter.dart';
 import 'src/build/build_log_combiner.dart';
 import 'src/build/polyfill_injector.dart';
-import 'src/build/script_compactor.dart';
+import 'src/build/polymer_bootstrap.dart';
 
 /// The Polymer transformer, which internally runs several phases that will:
 ///   * Extract inlined script tags into their separate files
@@ -44,7 +44,16 @@ TransformOptions _parseSettings(BarbackSettings settings) {
   bool csp = args['csp'] == true; // defaults to false
   bool injectBuildLogs =
       !releaseMode && args['inject_build_logs_in_output'] != false;
-  bool injectPlatformJs = args['inject_platform_js'] != false;
+  bool injectWebComponentsJs = true;
+  if (args['inject_platform_js'] != null) {
+    print(
+        'Deprecated polymer transformer option `inject_platform_js`. This has '
+        'been renamed `inject_web_components_js` to match the new file name.');
+    injectWebComponentsJs = args['inject_platform_js'] != false;
+  }
+  if (args['inject_webcomponents_js'] != null) {
+    injectWebComponentsJs = args['inject_webcomponents_js'] != false;
+  }
   return new TransformOptions(
       entryPoints: readFileList(args['entry_points']),
       inlineStylesheets: _readInlineStylesheets(args['inline_stylesheets']),
@@ -53,7 +62,7 @@ TransformOptions _parseSettings(BarbackSettings settings) {
       releaseMode: releaseMode,
       lint: _parseLintOption(args['lint']),
       injectBuildLogsInOutput: injectBuildLogs,
-      injectPlatformJs: injectPlatformJs);
+      injectWebComponentsJs: injectWebComponentsJs);
 }
 
 // Lint option can be empty (all files), false, true, or a map indicating
@@ -74,17 +83,17 @@ _parseLintOption(value) {
 
   // Any other case it is an error:
   print('Invalid value for "lint" in the polymer transformer. '
-        'Expected one of the following: \n'
-        '    lint: true  # or\n'
-        '    lint: false # or\n'
-        '    lint: \n'
-        '      include: \n'
-        '        - file1 \n'
-        '        - file2 # or \n'
-        '    lint: \n'
-        '      exclude: \n'
-        '        - file1 \n'
-        '        - file2 \n');
+      'Expected one of the following: \n'
+      '    lint: true  # or\n'
+      '    lint: false # or\n'
+      '    lint: \n'
+      '      include: \n'
+      '        - file1 \n'
+      '        - file2 # or \n'
+      '    lint: \n'
+      '      exclude: \n'
+      '        - file1 \n'
+      '        - file2 \n');
   return new LintOptions();
 }
 
@@ -120,7 +129,8 @@ Map<String, bool> _readInlineStylesheets(settingValue) {
       if (key == 'default') {
         inlineStylesheets[key] = value;
         return;
-      };
+      }
+
       key = systemToAssetPath(key);
       // Special case package urls, convert to AssetId and use serialized form.
       var packageMatch = _PACKAGE_PATH_REGEX.matchAsPrefix(key);
@@ -146,16 +156,37 @@ Map<String, bool> _readInlineStylesheets(settingValue) {
 /// comes first (other than linter, if [options.linter] is enabled), which
 /// allows the rest of the HTML-processing phases to operate only on HTML that
 /// is actually imported.
-List<List<Transformer>> createDeployPhases(
-    TransformOptions options, {String sdkDir}) {
+List<List<Transformer>> createDeployPhases(TransformOptions options,
+    {String sdkDir}) {
   // TODO(sigmund): this should be done differently. We should lint everything
   // that is reachable and have the option to lint the rest (similar to how
   // dart2js can analyze reachable code or entire libraries).
-  var phases = options.lint.enabled ? [[new Linter(options)]] : [];
+  var phases = [];
+
   phases.addAll([
-    [new ImportInliner(options)],
-    [new ObservableTransformer()],
-    [new ScriptCompactor(options, sdkDir: sdkDir)],
+    /// Must happen first, temporarily rewrites <link rel="x-dart-test"> tags to
+    /// <script type="application/dart" _was_test></script> tags.
+    [new web_components.RewriteXDartTestToScript(options.entryPoints)],
+    [new web_components.ScriptCompactorTransformer(options.entryPoints)],
+    [new PolymerBootstrapTransformer(options)],
+  ]);
+
+  // Lint after injecting @HtmlImport imports otherwise we will likely have
+  // incorrect warnings about missing elements.
+  if (options.lint.enabled) phases.add([new Linter(options)]);
+
+  phases.addAll([
+    [
+      new web_components.ImportInlinerTransformer(
+          options.entryPoints, ['[[', '{{'])
+    ],
+    [new HtmlFinalizer(options)],
+    [
+      new ObservableTransformer(
+          releaseMode: options.releaseMode,
+          injectBuildLogsInOutput: options.injectBuildLogsInOutput)
+    ],
+    // TODO(jakemac): Move to web_components.
     [new PolyfillInjector(options)],
     [new BuildFilter(options)],
     [new BuildLogCombiner(options)],
@@ -163,6 +194,11 @@ List<List<Transformer>> createDeployPhases(
   if (!options.releaseMode) {
     phases.add([new IndexPageBuilder(options)]);
   }
+  /// Must happen last, rewrites
+  /// <script type="application/dart" _was_test></script> tags back to
+  /// <link rel="x-dart-test"> tags.
+  phases.add(
+      [new web_components.RewriteScriptToXDartTest(options.entryPoints)]);
   return phases;
 }
 

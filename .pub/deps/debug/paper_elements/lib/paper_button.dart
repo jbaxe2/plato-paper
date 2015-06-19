@@ -1,13 +1,16 @@
 // DO NOT EDIT: auto-generated with `pub run custom_element_apigen:update`
 
 /// Dart API for the polymer element `paper_button`.
+@HtmlImport('paper_button_nodart.html')
 library paper_elements.paper_button;
 
 import 'dart:html';
 import 'dart:js' show JsArray, JsObject;
-import 'package:web_components/interop.dart' show registerDartType;
-import 'package:polymer/polymer.dart' show initMethod;
+import 'package:web_components/web_components.dart';
+import 'package:polymer_interop/polymer_interop.dart';
 import 'paper_button_base.dart';
+import 'paper_shadow.dart';
+import 'package:core_elements/core_a11y_keys.dart';
 
 /// Material Design: <a href="http://www.google.com/design/spec/components/buttons.html">Buttons</a>
 ///
@@ -19,17 +22,17 @@ import 'paper_button_base.dart';
 ///
 ///     <paper-button>flat button</paper-button>
 ///     <paper-button raised>raised button</paper-button>
+///     <paper-button noink>No ripple effect</paper-button>
 ///
 /// You may use custom DOM in the button body to create a variety of buttons. For example, to
 /// create a button with an icon and some text:
 ///
 ///     <paper-button>
-///       <core-icon icon="favorite">
+///       <core-icon icon="favorite"></core-icon>
 ///       custom button content
 ///     </paper-button>
 ///
-/// Styling
-/// -------
+/// ## Styling
 ///
 /// Style the button with CSS as you would a normal DOM element.
 ///
@@ -48,23 +51,22 @@ import 'paper_button_base.dart';
 ///     }
 ///
 /// The opacity of the ripple is not customizable via CSS.
+@CustomElementProxy('paper-button')
 class PaperButton extends PaperButtonBase {
   PaperButton.created() : super.created();
   factory PaperButton() => new Element.tag('paper-button');
 
   /// If true, the button will be styled with a shadow.
-  bool get raised => jsElement['raised'];
-  set raised(bool value) { jsElement['raised'] = value; }
+  bool get raised => jsElement[r'raised'];
+  set raised(bool value) { jsElement[r'raised'] = value; }
 
   /// By default the ripple emanates from where the user touched the button.
   /// Set this to true to always center the ripple.
-  bool get recenteringTouch => jsElement['recenteringTouch'];
-  set recenteringTouch(bool value) { jsElement['recenteringTouch'] = value; }
+  bool get recenteringTouch => jsElement[r'recenteringTouch'];
+  set recenteringTouch(bool value) { jsElement[r'recenteringTouch'] = value; }
 
   /// By default the ripple expands to fill the button. Set this to true to
   /// constrain the ripple to a circle within the button.
-  bool get fill => jsElement['fill'];
-  set fill(bool value) { jsElement['fill'] = value; }
+  bool get fill => jsElement[r'fill'];
+  set fill(bool value) { jsElement[r'fill'] = value; }
 }
-@initMethod
-upgradePaperButton() => registerDartType('paper-button', PaperButton);

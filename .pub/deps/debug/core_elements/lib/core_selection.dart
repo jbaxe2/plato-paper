@@ -1,18 +1,18 @@
 // DO NOT EDIT: auto-generated with `pub run custom_element_apigen:update`
 
 /// Dart API for the polymer element `core_selection`.
+@HtmlImport('core_selection_nodart.html')
 library core_elements.core_selection;
 
 import 'dart:html';
 import 'dart:js' show JsArray, JsObject;
-import 'package:web_components/interop.dart' show registerDartType;
-import 'package:polymer/polymer.dart' show initMethod;
-import 'package:custom_element_apigen/src/common.dart' show DomProxyMixin;
+import 'package:web_components/web_components.dart';
+import 'package:polymer_interop/polymer_interop.dart';
 
 /// The `<core-selection>` element is used to manage selection state. It has no
 /// visual appearance and is typically used in conjunction with another element.
 /// For example, [core-selector](#core-selector)
-/// use a `<core-selection>` to manage selection.
+/// uses a `<core-selection>` to manage selection.
 ///
 /// To mark an item as selected, call the `select(item)` method on
 /// `<core-selection>`. The item itself is an argument to this method.
@@ -56,13 +56,14 @@ import 'package:custom_element_apigen/src/common.dart' show DomProxyMixin;
 ///       <li>Green</li>
 ///       <li>Blue</li>
 ///     </selection-example>
-class CoreSelection extends HtmlElement with DomProxyMixin {
+@CustomElementProxy('core-selection')
+class CoreSelection extends HtmlElement with CustomElementProxyMixin, PolymerProxyMixin {
   CoreSelection.created() : super.created();
   factory CoreSelection() => new Element.tag('core-selection');
 
   /// If true, multiple selections are allowed.
-  bool get multi => jsElement['multi'];
-  set multi(bool value) { jsElement['multi'] = value; }
+  bool get multi => jsElement[r'multi'];
+  set multi(bool value) { jsElement[r'multi'] = value; }
 
   /// Retrieves the selected item(s).
   getSelection() =>
@@ -85,5 +86,3 @@ class CoreSelection extends HtmlElement with DomProxyMixin {
   void toggle(item) =>
       jsElement.callMethod('toggle', [item]);
 }
-@initMethod
-upgradeCoreSelection() => registerDartType('core-selection', CoreSelection);

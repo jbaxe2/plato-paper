@@ -91,7 +91,7 @@ class PlatoCourseChooser extends PolymerElement {
   void coursesLoaded (CustomEvent event) {
     Map<String, List> courses = event.detail as Map;
 
-    courses['courses'].forEach ((Map course) {
+    courses['courses'].forEach ((Map<String, String> course) {
       _simpleChooser.addOption (
         {course['id']: course['title']}
       );
