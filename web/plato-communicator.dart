@@ -10,9 +10,9 @@ import 'package:core_elements/core_ajax_dart.dart';
 import './lib/errors/plato_paper_errors.dart' show CommunicationsException;
 
 /// A Polymer-based element, using a core element ('core-ajax'), to handle
-/// server communications.  This element effectively serves as a wrapper
-/// element with some particular conventions used when communicating with the
-/// Plato server.
+/// server communications.  This element effectively serves as a wrapper,
+/// simplifying the use of some particular conventions when communicating with
+/// the Plato server.
 @CustomTag('plato-communicator')
 class PlatoCommunicator extends PolymerElement {
   /// A [String] representing the URL for the service or resource endpoint.
