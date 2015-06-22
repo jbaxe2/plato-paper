@@ -9,7 +9,10 @@ import 'package:core_elements/core_ajax_dart.dart';
 
 import './lib/errors/plato_paper_errors.dart' show CommunicationsException;
 
-/// A Polymer-based element, using paper elements, to handle server communications.
+/// A Polymer-based element, using a core element ('core-ajax'), to handle
+/// server communications.  This element effectively serves as a wrapper
+/// element with some particular conventions used when communicating with the
+/// Plato server.
 @CustomTag('plato-communicator')
 class PlatoCommunicator extends PolymerElement {
   /// A [String] representing the URL for the service or resource endpoint.
@@ -25,7 +28,7 @@ class PlatoCommunicator extends PolymerElement {
            writeValue (#successSignal, theSuccessSignal);
 
   /// A [String] representing the event name to fire when an error response from
-  /// the server has been recieved, or communications with the server failed.
+  /// the server has been received, or communications with the server failed.
   @published
   String get errorSignal => readValue (#errorSignal);
          set errorSignal (String theErrorSignal) =>
@@ -39,12 +42,12 @@ class PlatoCommunicator extends PolymerElement {
   /// some Ajax call to the server.
   @observable String params;
 
-  /// A JSON-encoded [String] possessing the possible body to send via POST during
-  /// some Ajax call to the server.
+  /// A JSON-encoded [String] possessing the possible body to send via POST
+  /// during some Ajax call to the server.
   @observable String body;
 
-  /// A [Map] of key/value pairs to be used as parameters for an Ajax call, which
-  /// will become JSON-encoded at the time the call is sent.
+  /// A [Map] of key/value pairs to be used as parameters for an Ajax call,
+  /// which will become JSON-encoded at the time the call is sent.
   Map<String, dynamic> _params;
 
   /// The [CoreAjax] custom element used for Ajax calls to the server.
@@ -109,10 +112,11 @@ class PlatoCommunicator extends PolymerElement {
     _params.addAll (someParams);
   }
 
-  /// The [send] method is used to send the Ajax request to the server.  An optional
-  /// HTTP method may be passed, which defaults to 'GET' (currently only supports
-  /// 'GET' and 'POST' methods).  If there are parameters to be sent, but which are
-  /// not JSON-encodable, a [CommunicationsException] instance will be thrown.
+  /// The [send] method is used to send the Ajax request to the server.  An
+  /// optional HTTP method may be passed, which defaults to 'GET' (currently
+  /// only supports 'GET' and 'POST' methods).  If there are parameters to be
+  /// sent, but which are not JSON-encodable, a [CommunicationsException]
+  /// instance will be thrown.
   void send ([String theMethod = 'GET']) {
     if (0 < _params.length) {
       try {
