@@ -18,7 +18,7 @@
     <inspection_tool class="HtmlUnknownTag" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="myValues">
         <value>
-          <list size="11">
+          <list size="17">
             <item index="0" class="java.lang.String" itemvalue="nobr" />
             <item index="1" class="java.lang.String" itemvalue="noembed" />
             <item index="2" class="java.lang.String" itemvalue="comment" />
@@ -30,6 +30,12 @@
             <item index="8" class="java.lang.String" itemvalue="paper-checkbox" />
             <item index="9" class="java.lang.String" itemvalue="paper-button" />
             <item index="10" class="java.lang.String" itemvalue="plato-communicator" />
+            <item index="11" class="java.lang.String" itemvalue="plato-simple-chooser" />
+            <item index="12" class="java.lang.String" itemvalue="core-toolbar" />
+            <item index="13" class="java.lang.String" itemvalue="core-icon-button" />
+            <item index="14" class="java.lang.String" itemvalue="core-overlay" />
+            <item index="15" class="java.lang.String" itemvalue="core-menu" />
+            <item index="16" class="java.lang.String" itemvalue="core-item" />
           </list>
         </value>
       </option>

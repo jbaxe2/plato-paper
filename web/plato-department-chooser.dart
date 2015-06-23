@@ -23,7 +23,7 @@ class PlatoDepartmentChooser extends PolymerElement {
   /// The [ready] method retrieves the elements for [PlatoSimpleChooser] and
   /// [PlatoCommunicator] from the DOM, and initializes some setup.  The
   /// communicator requests the list of departments from the server.  Some
-  /// event listeners for departments loading, failture, and selection are
+  /// event listeners for departments loading, failure, and selection are
   /// established.
   void ready() {
     super.ready();
